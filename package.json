@@ -1,0 +1,15 @@
+{
+  "name": "cfdi2pdf",
+  "version": "1.0.0",
+  "description": "Convert CFDI xml file to pdf",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Quad Tree SA de CV",
+  "license": "ISC",
+  "dependencies": {
+    "pdfmake": "^0.1.35",
+    "xml2js": "^0.4.19"
+  }
+}
