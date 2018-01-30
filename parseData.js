@@ -1,7 +1,7 @@
 /**
 * Receives a parsed XML resulting from using the dependency xml2js
 * and returns the relevant information in a simple json
-* @param {String} parsedXml xml parseado
+* @param {String} parsedXml parsed xml
 */
 export var parseData = function(parsedXml){
   //inicializar variables
