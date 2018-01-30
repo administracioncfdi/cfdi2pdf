@@ -1,1 +1,3 @@
-//Entry point
+import createPDFClient from "./createPDFClient"
+
+export createPDFClient
