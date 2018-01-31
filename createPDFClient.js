@@ -1,10 +1,10 @@
 //import necesary functions
-var parseData = require("./parseData").parseData()
-var createPDF = require("./createPDFContent").createPDFContent()
+var parseData = require("./parseData")
+var createPDF = require("./createPDFContent")
 
 //EXAMPLE---------------------------
-var pdfmakeExample = require("./pdfmakeExample").pdfmakeExample
-var xmlExample = require("./xmlExample").xmlExample
+var pdfmakeExample = require("./pdfmakeExample")
+var xmlExample = require("./xmlExample")
 //----------------------------------
 
 //require parseString
@@ -32,3 +32,5 @@ var createPDFClient = function(xml){
     }
   })
 }
+
+module.exports = createPDFClient;

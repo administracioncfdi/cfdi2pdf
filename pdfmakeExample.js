@@ -17,3 +17,5 @@ var pdfmakeExample = {
     }
   }
 };
+
+module.exports = pdfmakeExample

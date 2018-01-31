@@ -118,3 +118,5 @@ var parseData = function(parsedXml){
   }
   return xmlData
 }
+
+module.exports = parseData

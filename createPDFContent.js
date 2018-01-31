@@ -5,3 +5,5 @@
 var createPDFContent = function(json){
   return
 }
+
+module.exports = createPDFContent

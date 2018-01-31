@@ -1,1 +1,1 @@
-var createPDFClient = require("./createPDFClient").createPDFClient()
+var createPDFClient = require("./createPDFClient")
