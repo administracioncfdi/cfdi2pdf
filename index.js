@@ -1,3 +1,1 @@
-import createPDFClient from "./createPDFClient"
-
-export createPDFClient
+var createPDFClient = require("./createPDFClient").createPDFClient()

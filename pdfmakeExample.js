@@ -1,4 +1,4 @@
-export var pdfmakeExample = {
+var pdfmakeExample = {
   content: [
     { text: 'This is a header', style: 'header' },
     'No styling here, this is a standard paragraph',

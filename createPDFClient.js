@@ -1,10 +1,10 @@
 //import necesary functions
-import parseData from "./parseData"
-import createPDF from "./createPDFContent"
+var parseData = require("./parseData").parseData()
+var createPDF = require("./createPDFContent").createPDFContent()
 
 //EXAMPLE---------------------------
-import pdfmakeExample from "./pdfmakeExample"
-import xmlExample from "./xmlExample"
+var pdfmakeExample = require("./pdfmakeExample").pdfmakeExample
+var xmlExample = require("./xmlExample").xmlExample
 //----------------------------------
 
 //require parseString
@@ -17,12 +17,14 @@ require('pdfmake/build/vfs_fonts.js');
 * creates a pdf of a received cfdi xml in the client
 * @param {String} xml xml in string
 */
-export createPDFClient = function(xml){
+var createPDFClient = function(xml){
   xml = xmlExample //EXAMPLE
   parseString(xml, function(err, res){
     if(res){
       var json = parseData(result)
+      console.log(json)
       var content = createPDFContent(json)
+      console.log(content)
       //pdfMake.createPdf(content).open()
       pdfMake.createPdf(pdfmakeExmaple).open() //EXAMPLE
     }else{

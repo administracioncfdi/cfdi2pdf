@@ -3,7 +3,7 @@
 * and returns the relevant information in a simple json
 * @param {String} parsedXml parsed xml
 */
-export var parseData = function(parsedXml){
+var parseData = function(parsedXml){
   //inicializar variables
   var comprobante, emisor, receptor, uuid, cfdi, fecha, subTotal, descuento, impuestos,  total, conceptos
   //obtener comprobante de xml
@@ -116,6 +116,5 @@ export var parseData = function(parsedXml){
   }else{
     var xmlData = {}
   }
-  console.log(xmlData)
   return xmlData
 }
