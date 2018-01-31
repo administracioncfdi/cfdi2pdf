@@ -7,4 +7,4 @@ var fonts = {
 	}
 };
 
-module.exports { fonts }
+module.exports = { fonts:fonts }

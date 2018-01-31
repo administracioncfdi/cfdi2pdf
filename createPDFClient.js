@@ -21,7 +21,7 @@ var createPDFClient = function(xml){
   xml = xmlExample //EXAMPLE
   parseString(xml, function(err, res){
     if(res){
-      var json = parseData(result)
+      var json = parseData(res)
       console.log(json)
       var content = createPDFContent(json)
       console.log(content)
