@@ -1,3 +1,5 @@
+var XmlData = require("./xmlData")
+
 /**
 * Receives a parsed XML resulting from using the dependency xml2js
 * and returns the relevant information in a simple json
