@@ -1,6 +1,6 @@
 //import necesary functions
 var parseData = require("./parseData")
-var createPDF = require("./createPDFContent")
+var createPDFContent = require("./createPDFContent")
 
 //EXAMPLE---------------------------
 var pdfmakeExample = require("./pdfmakeExample")

@@ -11,4 +11,4 @@ var XmlData = function(emisor, receptor, uuid, cfdi, fecha, subTotal, descuento,
   this.conceptos = conceptos
 }
 
-module.exports XmlData
+module.exports = XmlData

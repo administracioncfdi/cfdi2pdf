@@ -1,6 +1,6 @@
 //import necesary functions
 var parseData = require("./parseData")
-var createPDF = require("./createPDFContent")
+var createPDFContent = require("./createPDFContent")
 
 //import fonts
 var fonts = require("./config.js").fonts
@@ -22,14 +22,14 @@ var printer = new PdfPrinter(fonts);
 */
 var createPDFServer = function(xml){
   xml = xmlExample //EXAMPLE
-  parseString(xml, function(err, res){
+  return parseString(xml, function(err, res){
     if(res){
       var json = parseData(res)
       console.log(json)
       var content = createPDFContent(json)
       console.log(content)
       //return printer.createPdfKitDocument(content);
-      return printer.createPdfKitDocument(pdfmakeExample);
+      return printer.createPdfKitDocument(pdfmakeExample)
     }else{
       throw err
     }
