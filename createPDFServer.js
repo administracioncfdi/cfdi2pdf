@@ -2,25 +2,23 @@
 var parseData = require("./parseData")
 var createPDFContent = require("./createPDFContent")
 
-//import fonts
-var fonts = require("./config.js").fonts
-
 //EXAMPLE---------------------------
-var pdfmakeExample = require("./pdfmakeExample")
-var xmlExample = require("./xmlExample")
+var pdfmakeExample = require("./examples/pdfmakeExample")
+var xmlExample = require("./examples/xmlExample")
 //----------------------------------
 
 //require parseString
 var parseString = require('xml2js').parseString; //Conversion de xml a objeto de javascript
 //require pdfmake
 var PdfPrinter = require('pdfmake/src/printer');
-var printer = new PdfPrinter(fonts);
 
 /**
 * creates a pdf of a received cfdi xml in the client
 * @param {String} xml xml in string
+* @param {Object} font fonts to be used for pdfMake
+* @param {Object} response response sent from the server to the client
 */
-var createPDFServer = function(xml){
+var createPDFServer = function(xml, fonts, response){
   xml = xmlExample //EXAMPLE
   return parseString(xml, function(err, res){
     if(res){
@@ -28,8 +26,11 @@ var createPDFServer = function(xml){
       console.log(json)
       var content = createPDFContent(json)
       console.log(content)
-      //return printer.createPdfKitDocument(content);
-      return printer.createPdfKitDocument(pdfmakeExample)
+      var printer = new PdfPrinter(fonts);
+      //var doc = printer.createPdfKitDocument(content);
+      var doc = printer.createPdfKitDocument(pdfmakeExample) //EXAMPLE
+      doc.pipe(response)
+      doc.end()
     }else{
       throw err
     }

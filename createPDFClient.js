@@ -3,8 +3,8 @@ var parseData = require("./parseData")
 var createPDFContent = require("./createPDFContent")
 
 //EXAMPLE---------------------------
-var pdfmakeExample = require("./pdfmakeExample")
-var xmlExample = require("./xmlExample")
+var pdfmakeExample = require("./examples/pdfmakeExample")
+var xmlExample = require("./examples/xmlExample")
 //----------------------------------
 
 //require parseString
