@@ -28,8 +28,8 @@ You need to pass an XML string to the method in order to get the PDF document.
 ### Creating a PDF server side ###
 
 In order to use the module server side, you need to have the fonts to be used in your public folder.
-You pass an XML string, the fonts definition and the response (where the pdf will be sent) in order to get the PDF document.
-Here is an example using express
+You need to pass an XML string, the fonts definition and the response (where the pdf will be sent) in order to get the PDF document.
+Here is an example using express:
 
     var cfdi2pdf = require("cfdi2pdf")
     var fonts = {
