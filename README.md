@@ -5,11 +5,17 @@ cdfi2pdf creates a pdf based on an XML CFDI. It uses pdfmake and xml2js as depen
 ### How  to use ###
 
 1.- Clone the repository:
+
     $ git clone https://"my-username"@bitbucket.org/quadtree/cfdi2pdf
+    
 2.- Go to the proyect folder:
+
     $ cd cfdi2pdf
-3.- Install dependencies
+    
+3.- Install dependencies:
+
     $ npm install
+    
 4.- Copy the proyect to your application node_modules folder
 
 ### Creating a PDF client side ###
