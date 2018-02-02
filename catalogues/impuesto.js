@@ -1,7 +1,7 @@
 var impuestoCatalogue = {
-  { code: '001', description: 'ISR' },
-  { code: '002', description: 'IVA' },
-  { code: '003', description: 'IEPS' }
+  '001': 'ISR',
+  '002': 'IVA',
+  '003': 'IEPS'
 }
 
 module.exports = impuestoCatalogue
