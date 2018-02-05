@@ -27,8 +27,8 @@ var createPDFServer = function(xml, fonts, response){
       var content = createPDFContent(json)
       console.log(content)
       var printer = new PdfPrinter(fonts);
-      //var doc = printer.createPdfKitDocument(content);
-      var doc = printer.createPdfKitDocument(pdfmakeExample) //EXAMPLE
+      var doc = printer.createPdfKitDocument(content);
+      //var doc = printer.createPdfKitDocument(pdfmakeExample) //EXAMPLE
       doc.pipe(response)
       doc.end()
     }else{
