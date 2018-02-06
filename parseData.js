@@ -61,7 +61,6 @@ var parseData = function(parsedXml){
       var comprobanteConcepto = comprobanteConceptos[0]['cfdi:Concepto']
       if(comprobanteConcepto){
         obj.conceptos = comprobanteConcepto.map(function(concepto){
-          console.log(concepto)
           var traslado
           var impuestos = concepto[0]['Impuestos']
           if(impuestos){
