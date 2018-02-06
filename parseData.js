@@ -59,13 +59,12 @@ var parseData = function(parsedXml){
       var comprobanteConcepto = comprobanteConceptos[0]['cfdi:Concepto']
       if(comprobanteConcepto){
         obj.conceptos = comprobanteConcepto.map(function(concepto){
-          console.log(concepto)
           var traslado
-          var impuestos = concepto[0]['Impuestos']
+          var impuestos = concepto['cfdi:Impuestos']
           if(impuestos){
-            var traslados = impuestos[0]['Traslados']
+            var traslados = impuestos[0]['cfdi:Traslados']
             if(traslados){
-              traslado = traslados[0]['Traslado']
+              traslado = traslados[0]['cfdi:Traslado']
             }
           }
           return {
@@ -76,8 +75,8 @@ var parseData = function(parsedXml){
             importe: checkIfValue(concepto['$']['Importe']),
             descripcion: checkIfExists(concepto['$']['Descripcion']),
             descuento: checkIfValue(concepto['$']['Descuento']),
-            impuesto: traslado ? checkIfExists(traslado['$']['Impuesto']) : "",
-            importeImpuesto: traslado ? checkIfValue(traslado['$']['Importe']) : "0"
+            impuesto: traslado ? checkIfExists(traslado[0]['$']['Impuesto']) : "",
+            importeImpuesto: traslado ? checkIfValue(traslado[0]['$']['Importe']) : "0"
           }
         })
       }
@@ -90,15 +89,15 @@ var parseData = function(parsedXml){
         //inicializar objeto cfdiRelacionado
         obj.cfdiRelacionado = {}
         //generar objeto CfdiRelacionado
-        obj.cfdiRelacionado.tipoRelacion = checkIfExists(comprobanteCfdiRelacionado['$']['TipoRelacion'])
-        obj.cfdiRelacionado.U
+        obj.cfdiRelacionado.tipoRelacion = checkIfExists(comprobanteCfdiRelacionados[0]['$']['TipoRelacion'])
+        obj.cfdiRelacionado.uuid = checkIfExists(comprobanteCfdiRelacionado[0]['$']['UUID'])
       }
     }
     //obtener complemento del comprobante
     var comprobanteComplemento = comprobante['cfdi:Complemento']
     if(comprobanteComplemento){
       //obtener el timbre fiscal digital del comprobante
-      comprobanteTimbreFiscalDigital = comprobanteComplemento[0]['TimbreFiscalDigital'] ? comprobanteComplemento[0]['TimbreFiscalDigital'] : comprobanteComplemento[0]['tfd:TimbreFiscalDigital']
+      comprobanteTimbreFiscalDigital = comprobanteComplemento[0]['tfd:TimbreFiscalDigital']
       if(comprobanteTimbreFiscalDigital){
         //inicializar objeto timbreFiscalDigital
         obj.timbreFiscalDigital = {}
@@ -119,8 +118,8 @@ var parseData = function(parsedXml){
     //obtener impuestos del comprobante
     var comprobanteImpuestos = comprobante['cfdi:Impuestos']
     if(comprobanteImpuestos){
-      obj.totalImpuestosRetenidos = checkIfValue(comprobanteImpuestos['$']['TotalImpuestosRetenidos'])
-      obj.totalImpuestosTrasladados = checkIfValue(comprobanteImpuestos['$']['TotalImpuestosTrasladados'])
+      obj.totalImpuestosRetenidos = checkIfValue(comprobanteImpuestos[0]['$']['TotalImpuestosRetenidos'])
+      obj.totalImpuestosTrasladados = checkIfValue(comprobanteImpuestos[0]['$']['TotalImpuestosTrasladados'])
     }
   }
   return obj
