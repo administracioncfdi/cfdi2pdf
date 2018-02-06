@@ -1,5 +1,3 @@
-var XmlData = require("./xmlData")
-
 var checkIfExists = function(parameter){
   return parameter ? parameter : ""
 }
@@ -61,6 +59,7 @@ var parseData = function(parsedXml){
       var comprobanteConcepto = comprobanteConceptos[0]['cfdi:Concepto']
       if(comprobanteConcepto){
         obj.conceptos = comprobanteConcepto.map(function(concepto){
+          console.log(concepto)
           var traslado
           var impuestos = concepto[0]['Impuestos']
           if(impuestos){
@@ -123,6 +122,7 @@ var parseData = function(parsedXml){
       obj.totalImpuestosRetenidos = checkIfValue(comprobanteImpuestos['$']['TotalImpuestosRetenidos'])
       obj.totalImpuestosTrasladados = checkIfValue(comprobanteImpuestos['$']['TotalImpuestosTrasladados'])
     }
+  }
   return obj
 }
 
