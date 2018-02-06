@@ -71,25 +71,25 @@ var createPDFContent = function(json){
   						layout: 'lightHorizontalLines'
           },
   		'\n',
-          {
-              table: {
-                  widths: [40,40,40,40,40,40,40,40,25,30,40],
-                  body: [
-                      [{text: 'PARTIDAS DEL COMPROBANTE', style: 'tableHeader', colSpan: 11, alignment: 'center'},{},{},{},{},{},{},{},{},{},{}],
-                      ['ClaveProdServ','Numero Identificacion','Cantidad','Clave Unidad','Unidad','Descripcion','Valor Unitario','Descuento',{colSpan: 2, text: 'Impuesto'},'','Importe'],
-                      ['31211502','UT421510','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
-  										['31211502','UT421510','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
-  										['31211502','UT421510','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
-  										['31211502','UT421510','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
-  										['31211502','UT421510','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00']
-                  ]
-              },
-  						layout: {
-  							fillColor: function (i, node) {
-  								return (i % 2 != 0) ? '#CCCCCC' : null;
-  							}
-  						}
-          },
+      {
+        table: {
+            widths: [55,50,40,40,65,50,40,25,30,40],
+            body: [
+                [{text: 'PARTIDAS DEL COMPROBANTE', style: 'tableHeader', colSpan: 10, alignment: 'center'},{},{},{},{},{},{},{},{},{}],
+                ['ClaveProdServ','Cantidad','Clave Unidad','Unidad','Descripción','Valor Unitario','Descuento',{colSpan: 2, text: 'Impuesto'},'','Importe'],
+                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
+                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
+                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
+                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
+                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00']
+            ]
+        },
+        layout: {
+          fillColor: function (i, node) {
+            return (i % 2 != 0) ? '#CCCCCC' : null;
+          }
+        }
+      },
   		'\n',
           {
               table: {
