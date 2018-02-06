@@ -1,48 +1,100 @@
 var XmlData = require("./xmlData")
 
+var checkIfExists = function(parameter){
+  return parameter ? parameter : ""
+}
+
+var checkIfValue = function(parameter){
+  return parameter ? parameter : "0"
+}
+
 /**
 * Receives a parsed XML resulting from using the dependency xml2js
-* and returns the relevant information in a simple json
+* and returns the relevant information in a simple json (THIS IS ONLY VALID FOR 3.3)
 * @param {String} parsedXml parsed xml
 */
 var parseData = function(parsedXml){
   //inicializar variables
-  var comprobante, emisor, receptor, uuid, cfdi, fecha, subTotal, descuento, impuestos,  total, conceptos
+  var obj = {}
   //obtener comprobante de xml
-  comprobante = parsedXml['cfdi:Comprobante']
+  var comprobante = parsedXml['cfdi:Comprobante']
   if(comprobante){
+    //obtener datos generales
+    obj.serie = checkIfExists(comprobante['$']['Serie'])
+    obj.folio = checkIfExists(comprobante['$']['Folio'])
+    obj.fecha = checkIfExists(comprobante['$']['Fecha'])
+    obj.lugar = checkIfExists(comprobante['$']['LugarExpedicion'])
+    obj.tipoDeComprobante = checkIfExists(comprobante['$']['TipoDeComprobante'])
+    obj.moneda = checkIfExists(comprobante['$']['Moneda'])
+    obj.formaPago = checkIfExists(comprobante['$']['FormaPago'])
+    obj.tipoCambio = checkIfExists(comprobante['$']['TipoCambio'])
+    obj.metodoPago = checkIfExists(comprobante['$']['MetodoPago'])
+    obj.condicionesDePago = checkIfExists(comprobante['$']['CondicionesDePago'])
+    obj.confirmacion = checkIfExists(comprobante['$']['Confirmacion'])
     //obtner emisor del comprobante
     var comprobanteEmisor = comprobante['cfdi:Emisor']
-    //initializar el objeto emisor
-    emisor = {}
     if(comprobanteEmisor){
-      //soporte para formato 3.2 y 3.3
+      //initializar el objeto emisor
+      obj.emisor = {}
       //generar objeto emisor
-      emisor.rfc = comprobanteEmisor[0]['$']['Rfc'] ? comprobanteEmisor[0]['$']['Rfc'] : comprobanteEmisor[0]['$']['rfc']
-      emisor.nombre = comprobanteEmisor[0]['$']['Nombre'] ? comprobanteEmisor[0]['$']['Nombre'] : comprobanteEmisor[0]['$']['nombre']
-      //obtener el domicilio fiscal del emisor
-      var comprobanteDomicilio = comprobanteEmisor[0]['cfdi:DomicilioFiscal']
-      //inicializar objeto de domicilio
-      emisor.domicilio = {}
-      if(comprobanteDomicilio){
-        //generar objeto domicilio
-        emisor.domicilio.calle = comprobanteDomicilio[0]['$']['calle']
-        emisor.domicilio.numeroExterior = comprobanteDomicilio[0]['$']['noExterior']
-        emisor.domicilio.numeroInterior = comprobanteDomicilio[0]['$']['noInterior']
-        emisor.domicilio.colonia = comprobanteDomicilio[0]['$']['colonia']
-        emisor.domicilio.codigoPostal = comprobanteDomicilio[0]['$']['codigoPostal']
-        emisor.domicilio.municipio = comprobanteDomicilio[0]['$']['municipio']
-        emisor.domicilio.estado = comprobanteDomicilio[0]['$']['estado']
-      }
-      emisor.regimen = comprobanteEmisor[0]['$']['RegimenFiscal'] ? comprobanteEmisor[0]['$']['RegimenFiscal'] : comprobanteEmisor[0]['cfdi:RegimenFiscal'] ? comprobanteEmisor[0]['cfdi:RegimenFiscal'][0]['$']['Regimen'] : undefined
+      obj.emisor.rfc = checkIfExists(comprobanteEmisor[0]['$']['Rfc'])
+      obj.emisor.nombre = checkIfExists(comprobanteEmisor[0]['$']['Nombre'])
+      obj.emisor.regimen = checkIfExists(comprobanteEmisor[0]['$']['RegimenFiscal'])
     }
     //obtener receptor del comprobante
     var comprobanteReceptor = comprobante['cfdi:Receptor']
-    //inicializar objeto receptor
-    receptor = {}
     if(comprobanteReceptor){
+      //inicializar objeto receptor
+      obj.receptor = {}
       //generar objeto receptor
-      receptor.rfc = comprobanteReceptor[0]['$']['Rfc'] ? comprobanteReceptor[0]['$']['Rfc'] : comprobanteReceptor[0]['$']['rfc']
+      obj.receptor.rfc = checkIfExists(comprobanteReceptor[0]['$']['Rfc'])
+      obj.receptor.nombre = checkIfExists(comprobanteReceptor[0]['$']['Nombre'])
+      obj.receptor.residenciaFiscal =  checkIfExists(comprobanteReceptor[0]['$']['ResidenciaFiscal'])
+      obj.receptor.numRegIdTrib = checkIfExists(comprobanteReceptor[0]['$']['NumRegIdTrib'])
+      obj.receptor.usoCFDI = checkIfExists(comprobanteReceptor[0]['$']['UsoCFDI'])
+    }
+    //inicializar arreglo de conceptos
+    obj.conceptos = []
+    //obtener conceptos del comprobante
+    var comprobanteConceptos = comprobante['cfdi:Conceptos']
+    if(comprobanteConceptos){
+      var comprobanteConcepto = comprobanteConceptos[0]['cfdi:Concepto']
+      if(comprobanteConcepto){
+        obj.conceptos = comprobanteConcepto.map(function(concepto){
+          console.log(concepto)
+          var traslado
+          var impuestos = concepto[0]['Impuestos']
+          if(impuestos){
+            var traslados = impuestos[0]['Traslados']
+            if(traslados){
+              traslado = traslados[0]['Traslado']
+            }
+          }
+          return {
+            clave: checkIfExists(concepto['$']['ClaveProdServ']),
+            cantidad: checkIfValue(concepto['$']['Cantidad']),
+            valorUnitario: checkIfValue(concepto['$']['ValorUnitario']),
+            unidad: checkIfExists(concepto['$']['ClaveUnidad']),
+            importe: checkIfValue(concepto['$']['Importe']),
+            descripcion: checkIfExists(concepto['$']['Descripcion']),
+            descuento: checkIfValue(concepto['$']['Descuento']),
+            impuesto: traslado ? checkIfExists(traslado['$']['Impuesto']) : ""
+            importeImpuesto: traslado ? checkIfValue(traslado['$']['Importe']) : "0"
+          }
+        })
+      }
+    }
+    //obtener cfdiRelacionado del comprobante
+    var comprobanteCfdiRelacionados = comprobante['cfdi:CfdiRelacionados']
+    if(comprobanteCfdiRelacionados){
+      var comprobanteCfdiRelacionado = comprobanteCfdiRelacionados[0]['cfdi:CfdiRelacionado']
+      if(comprobanteCfdiRelacionado){
+        //inicializar objeto cfdiRelacionado
+        obj.cfdiRelacionado = {}
+        //generar objeto CfdiRelacionado
+        obj.cfdiRelacionado.tipoRelacion = checkIfExists(comprobanteCfdiRelacionado['$']['TipoRelacion'])
+        obj.cfdiRelacionado.U
+      }
     }
     //obtener complemento del comprobante
     var comprobanteComplemento = comprobante['cfdi:Complemento']
@@ -50,75 +102,29 @@ var parseData = function(parsedXml){
       //obtener el timbre fiscal digital del comprobante
       comprobanteTimbreFiscalDigital = comprobanteComplemento[0]['TimbreFiscalDigital'] ? comprobanteComplemento[0]['TimbreFiscalDigital'] : comprobanteComplemento[0]['tfd:TimbreFiscalDigital']
       if(comprobanteTimbreFiscalDigital){
-        uuid = comprobanteTimbreFiscalDigital[0]['$']['UUID']
+        //inicializar objeto timbreFiscalDigital
+        obj.timbreFiscalDigital = {}
+        //generar objecto timbreFiscalDigital
+        obj.timbreFiscalDigital.uuid = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['UUID'])
+        obj.timbreFiscalDigital.fechaTimbrado = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['FechaTimbrado'])
+        obj.timbreFiscalDigital.selloSAT = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['SelloSAT'])
+        obj.timbreFiscalDigital.selloCFD = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['SelloCFD'])
+        obj.timbreFiscalDigital.noCertificadoSAT = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['NoCertificadoSAT'])
       }
     }
-    //obtener cdfi
-    cfdi = comprobante['$']['xmlns:cfdi']
-    //obtener fecha
-    fecha = comprobante['$']['Fecha'] ? comprobante['$']['Fecha'] : comprobante['$']['fecha']
     //obtener subtotal
-    subTotal = comprobante['$']['SubTotal'] ? comprobante['$']['SubTotal'] : comprobante['$']['subTotal']
+    obj.subTotal = checkIfValue(comprobante['$']['SubTotal'])
+    //obtener descuento
+    obj.descuento = checkIfValue(comprobante['$']['Descuento'])
+    //obtener total
+    obj.total = checkIfValue(comprobante['$']['Total'])
     //obtener impuestos del comprobante
     var comprobanteImpuestos = comprobante['cfdi:Impuestos']
-    //inicializar arreglo de impuestos
-    impuestos = []
     if(comprobanteImpuestos){
-      //obtener traslados del comprobante
-      var comprobanteTraslados = comprobanteImpuestos[0]['cfdi:Traslados']
-      if(comprobanteTraslados){
-        //obtener traslado del comprobante
-        var comprobanteTraslado = comprobanteTraslados[0]['cfdi:Traslado']
-        if(comprobanteTraslado){
-          //generar arreglo de impuestos
-          impuestos = comprobanteTraslado.map(function(traslado){
-            var impuesto = traslado['$']['Impuesto']
-            if(impuesto){
-              if(impuesto == "001"){
-                impuesto = 'ISR'
-              }else{
-                impuesto = 'IVA'
-              }
-            }else{
-              impuesto =  traslado['$']['impuesto']
-            }
-            return {
-              impuesto: impuesto,
-              importe: traslado['$']['Importe'] ? traslado['$']['Importe'] : traslado['$']['importe']
-            }
-          })
-        }
-      }
+      obj.totalImpuestosRetenidos = checkIfValue(comprobanteImpuestos['$']['TotalImpuestosRetenidos'])
+      obj.totalImpuestosTrasladados = checkIfValue(comprobanteImpuestos['$']['TotalImpuestosTrasladados'])
     }
-    //obtener descuento
-    descuento = comprobante['$']['Descuento'] ? comprobante['$']['Descuento'] : comprobante['$']['descuento'] ? comprobante['$']['descuento'] : '0'
-    //obtener total
-    total = comprobante['$']['Total'] ? comprobante['$']['Total'] : comprobante['$']['total']
-    //obtener conceptos del comprobante
-    var comprobanteConceptos = comprobante['cfdi:Conceptos']
-    //inicializar arreglo de conceptos
-    conceptos = []
-    if(comprobanteConceptos){
-      var comprobanteConcepto = comprobanteConceptos[0]['cfdi:Concepto']
-      if(comprobanteConcepto){
-        conceptos = comprobanteConcepto.map(function(concepto){
-          return {
-            clave: concepto['$']['ClaveProdServ'],
-            cantidad: concepto['$']['Cantidad'] ? concepto['$']['Cantidad'] :concepto['$']['cantidad'],
-            valorUnitario: concepto['$']['ValorUnitario'] ? concepto['$']['ValorUnitario'] : concepto['$']['valorUnitario'],
-            unidad: concepto['$']['ClaveUnidad'] ? concepto['$']['ClaveUnidad'] : concepto['$']['unidad'],
-            importe: concepto['$']['Importe'] ? concepto['$']['Importe'] : concepto['$']['importe'],
-            descripcion: concepto['$']['Descripcion'] ? concepto['$']['Descripcion'] : concepto['$']['descripcion'],
-            descuento: concepto['$']['Descuento'] ? concepto['$']['Descuento'] : concepto['$']['descuento'] ? concepto['$']['descuento'] : '0'
-          }
-        })
-      }
-    }
-    var xmlData = new XmlData(emisor, receptor, uuid, cfdi, fecha, subTotal, descuento, impuestos,  total, conceptos)
-  }else{
-    var xmlData = {}
-  }
-  return xmlData
+  return obj
 }
 
 module.exports = parseData
