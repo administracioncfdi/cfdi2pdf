@@ -77,7 +77,7 @@ var parseData = function(parsedXml){
             importe: checkIfValue(concepto['$']['Importe']),
             descripcion: checkIfExists(concepto['$']['Descripcion']),
             descuento: checkIfValue(concepto['$']['Descuento']),
-            impuesto: traslado ? checkIfExists(traslado['$']['Impuesto']) : ""
+            impuesto: traslado ? checkIfExists(traslado['$']['Impuesto']) : "",
             importeImpuesto: traslado ? checkIfValue(traslado['$']['Importe']) : "0"
           }
         })
