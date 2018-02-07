@@ -29,7 +29,7 @@ var generateQrCode = function(timbreFiscalDigital, re, rr, tt){
     .replace("{re}", re)
     .replace("{rr}", rr)
     .replace("{tt}", tt)
-    .replace("{fe}", timbreFiscalDigital.selloCFD.substring(timbreFiscalDigital.selloCFD.length - 10, timbreFiscalDigital.selloCFD.length - 2))
+    .replace("{fe}", timbreFiscalDigital.selloCFD.substring(timbreFiscalDigital.selloCFD.length - 8, timbreFiscalDigital.selloCFD.length))
     console.log(qrCode)
   return qrCode
 }
