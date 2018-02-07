@@ -87,16 +87,14 @@ var parseData = function(parsedXml){
         obj.cfdiRelacionado.uuid = checkIfExists(comprobanteCfdiRelacionado[0]['$']['UUID'])
       }
     }
-    //inicializar objeto timbreFiscalDigital
-    obj.timbreFiscalDigital = {}
     //obtener complemento del comprobante
     var comprobanteComplemento = comprobante['cfdi:Complemento']
-    console.log(comprobanteComplemento)
     if(comprobanteComplemento){
       //obtener el timbre fiscal digital del comprobante
       comprobanteTimbreFiscalDigital = comprobanteComplemento[0]['tfd:TimbreFiscalDigital']
-      console.log(comprobanteTimbreFiscalDigital)
       if(comprobanteTimbreFiscalDigital){
+        //inicializar objeto timbreFiscalDigital
+        obj.timbreFiscalDigital = {}
         //generar objecto timbreFiscalDigital
         obj.timbreFiscalDigital.uuid = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['UUID'])
         obj.timbreFiscalDigital.fechaTimbrado = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['FechaTimbrado'])
