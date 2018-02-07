@@ -23,7 +23,7 @@ var generateConceptsTable = function(conceptos){
 }
 
 var generateQrCode = function(timbreFiscalDigital, re, rr, tt){
-  var template = "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx&id={id}&re={re}&rr={rr}&tt={tt}&fe={fe}"
+  var template = "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id={id}&re={re}&rr={rr}&tt={tt}&fe={fe}"
   var qrCode = template
     .replace("{id}", timbreFiscalDigital.uuid)
     .replace("{re}", re)
