@@ -38,7 +38,7 @@ getGroupToCurrency = function(group){
 //function to get entire number to currency
 toCurrency = function(number){
   //number to string
-  number = number.toFixed(2).toString();
+  number = number.toFixed(2);
   //separate decimals (only 2) and integers
   var integers = number.substring(0, number.indexOf("."));
   var decimals = number.substring(number.indexOf(".") + 1, number.length);
