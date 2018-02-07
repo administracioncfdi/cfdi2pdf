@@ -1,3 +1,27 @@
+//import all catalogues
+var claveUnidadCatalogue = require("./catalogues/claveUnidad")
+var formaPagoCatalogue = require("./catalogues/formaPago")
+var impuestoCatalogue = require("./catalogues/impuesto")
+var metodoPagoCatalogue = require("./catalogues/metodoPago")
+var monedaCatalogue = require("./catalogues/moneda")
+var regimenFiscalCatalogue = require("./catalogues/regimenFiscal")
+var tipoDeComprobanteCatalogue = require("./catalogues/tipoDeComprobante")
+var tipoRelacionCatalogue = require("./catalogues/tipoRelacion")
+var usoCFDICatalogue = require("./catalogues/usoCFDI")
+var toCurrency = require("./toCurrency")
+var generateOriginalString = require("./generateOriginalString")
+var checkIfExists = require("./check").checkIfExists
+
+var generateConceptsTable = function(conceptos){
+  var arr = conceptos.map(function(concepto){
+    return [concepto.clave, concepto.cantidad, concepto.unidad, claveUnidadCatalogue[concepto.unidad], concepto.descripcion, "$ " + concepto.valorUnitario, "$ " + concepto.descuento,
+    impuestoCatalogue[concepto.impuesto] ? concepto.impuesto + " - " + impuestoCatalogue[concepto.impuesto] : "", "$ " + concepto.importeImpuesto, "$ " + concepto.importe ]
+  })
+  arr.unshift(['ClaveProdServ','Cantidad','Clave Unidad','Unidad','Descripción','Valor Unitario','Descuento',{colSpan: 2, text: 'Impuesto'},'','Importe'])
+  arr.unshift([{text: 'PARTIDAS DEL COMPROBANTE', style: 'tableHeader', colSpan: 10, alignment: 'center'},{},{},{},{},{},{},{},{},{}])
+  return arr
+}
+
 /**
 * Receives a json and returns a pdf content object for pdfmake
 * @param {Object} json result json from using parseData function
@@ -20,10 +44,10 @@ var createPDFContent = function(json){
           		widths: ['*','auto','auto'],
           		body: [
           			[{rowSpan: 5, image: logo, fit: [260, 260]},'SERIE:','A'],
-          			['','FOLIO:','42'],
-          			['','FECHA:','04/07/2017'],
-          			['','EXPEDICION:','44600'],
-          			['','COMPROBANTE:','I-Ingresos']
+          			['','FOLIO:', json.serie + json.folio],
+          			['','FECHA:', json.fecha ? json.fecha.substring(0,10) : ""],
+          			['','EXPEDICION:', json.lugar],
+          			['','COMPROBANTE:', tipoDeComprobanteCatalogue[json.tipoDeComprobante] ? json.tipoDeComprobante + " - " + tipoDeComprobanteCatalogue[json.tipoDeComprobante] : "" ]
           		]
           	},
   					layout: 'noBorders',
@@ -35,8 +59,8 @@ var createPDFContent = function(json){
                   widths: ['auto','*','auto','auto'],
                   body: [
                       [{text: 'EMISOR', style: 'tableHeader', colSpan: 4, alignment: 'center'}, {}, {},{}],
-                      ['NOMBRE:', 'Pinturas Magicas SA de CV','RFC:', 'PIM801201MK2'],
-                      ['REGIMEN FISCAL:', {colSpan: 3, text: '601 - General de Ley de Personas Morales'},'']
+                      ['NOMBRE:', checkIfExists(json.emisor.nombre),'RFC:', checkIfExists(json.emisor.rfc)],
+                      ['REGIMEN FISCAL:', {colSpan: 3, text: regimenFiscalCatalogue[json.emisor.regimenFiscal] ? json.emisor.regimenFiscal + " - " + regimenFiscalCatalogue[json.emisor.regimenFiscal] : ""},'']
                   ]
               },
   						layout: 'noBorders',
@@ -48,9 +72,9 @@ var createPDFContent = function(json){
                   widths: ['auto','*','auto','auto'],
                   body: [
                       [{text: 'RECEPTOR', style: 'tableHeader', colSpan: 4, alignment: 'center'}, {}, {},{}],
-                      ['NOMBRE:', 'Computacion en Accion SA de CV','RFC:', 'CAC840428RH1'],
-                      ['RESIDENCIA FISCAL:', '','USO CFDI:', 'G03 - Gastos en General'],
-                      ['NUMERO ID TRIB.:', {colSpan: 3, text: ''},'']
+                      ['NOMBRE:', checkIfExists(json.receptor.nombre) ,'RFC:', checkIfExists(json.receptor.rfc)],
+                      ['RESIDENCIA FISCAL:', checkIfExists(json.receptor.residenciaFiscal),'USO CFDI:', usoCFDICatalogue[json.receptor.usoCFDI] ? json.receptor.usoCFDI + " - " + usoCFDICatalogue[json.receptor.usoCFDI] : "" ],
+                      ['NUMERO ID TRIB.:', {colSpan: 3, text: json.receptor.numRegIdTrib },'']
                   ]
               },
   						layout: 'noBorders',
@@ -62,9 +86,9 @@ var createPDFContent = function(json){
                   widths: [95,'*',95,'*'],
                   body: [
                       [{text: 'DATOS GENERALES DEL COMPROBANTE', style: 'tableHeader', colSpan: 4, alignment: 'center'}, {}, {},{}],
-                      ['MONEDA:', 'MXN - Peso Mexicano','FORMA PAGO:', '04 - Tarjeta de credito'],
-                      ['TIPO DE CAMBIO:', '1.00','CONDICIONES DE PAGO:', 'Contado'],
-                      ['CLAVE CONFIRMACION:', 'A403b','METODO DE PAGO:', 'PUE - Pago en una sola exhibicion']
+                      ['MONEDA:', monedaCatalogue[json.moneda] ? json.moneda + " - " + monedaCatalogue[json.moneda] : "" ,'FORMA PAGO:', formaPagoCatalogue[json.formaPago] ? json.formaPago + " - " + formaPagoCatalogue[json.formaPago] : "" ],
+                      ['TIPO DE CAMBIO:', json.tipoCambio,'CONDICIONES DE PAGO:', json.condicionesDePago],
+                      ['CLAVE CONFIRMACION:', json.confirmacion,'METODO DE PAGO:', metodoPagoCatalogue[json.metodoPago] ? json.metodoPago + " - " + metodoPagoCatalogue[json.metodoPago] : ""]
                   ]
               },
   						layout: 'noBorders',
@@ -74,15 +98,7 @@ var createPDFContent = function(json){
       {
         table: {
             widths: [55,50,40,40,65,50,40,25,30,40],
-            body: [
-                [{text: 'PARTIDAS DEL COMPROBANTE', style: 'tableHeader', colSpan: 10, alignment: 'center'},{},{},{},{},{},{},{},{},{}],
-                ['ClaveProdServ','Cantidad','Clave Unidad','Unidad','Descripción','Valor Unitario','Descuento',{colSpan: 2, text: 'Impuesto'},'','Importe'],
-                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
-                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
-                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
-                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00'],
-                ['31211502','24','LTR','Litros','Pintura vinilica blanca','$ 49.50','$ 0','002 - IVA','$ 190.08','$ 1,188.00']
-            ]
+            body: generateConceptsTable(json.conceptos)
         },
         layout: {
           fillColor: function (i, node) {
@@ -96,11 +112,11 @@ var createPDFContent = function(json){
                   widths: ['auto','*','auto','*'],
                   body: [
                       [{text: 'CFDI RELACIONADO', style: 'tableHeader', colSpan: 4, alignment: 'center'}, {}, {},{}],
-                      ['TIPO RELACION:', '04 - Sustitucion de los CFDI previos','CFDI RELACIONADO:', 'A39DA66B-49E3-879B-FC05185B0EF7'],
-                      ['SUBTOTAL:', '$ 1,258.00','TOTAL:','$ 1,459.28'],
-                      ['DESCUENTO:', '$ 0',{colSpan: 2, text: 'IMPORTE CON LETRA:'},''],
-                      ['TOTAL IMP. TRASLADADOS:', '$ 201.28',{colSpan: 2, rowSpan: 2, text: 'Mil cuatrocientos cincuenta y nueve  con 28 centavos'},''],
-                      ['TOTAL IMP. RETENIDOS:', '$ 0','',''],
+                      ['TIPO RELACION:', tipoRelacionCatalogue[json.cfdiRelacionado.tipoRelacion] ? json.cfdiRelacionado.tipoRelacion + " - " + tipoRelacionCatalogue[json.cfdiRelacionado.tipoRelacion] : "" ,'CFDI RELACIONADO:', json.cfdiRelacionado.uuid],
+                      ['SUBTOTAL:', '$ ' + json.subTotal,'TOTAL:','$ ' + json.total],
+                      ['DESCUENTO:', '$ ' + json.descuento,{colSpan: 2, text: 'IMPORTE CON LETRA:'},''],
+                      ['TOTAL IMP. TRASLADADOS:', '$ ' + json.totalImpuestosTrasladados,{colSpan: 2, rowSpan: 2, text: toCurrency(parseFloat(json.total))},''],
+                      ['TOTAL IMP. RETENIDOS:', '$ ' + json.totalImpuestosRetenidos,'',''],
                   ]
               },
   						layout: 'noBorders',
@@ -112,12 +128,12 @@ var createPDFContent = function(json){
                   widths: [100,100,287],
                   body: [
 
-                      [{colSpan: 1, rowSpan: 4, image: qr, fit: [100, 100]},'NUMERO SERIE CERTIFICADO','00001000000404420163'],
-                      ['', 'FECHA HORA CERTIFICACION', '2017-07-01 11:20:08'],
-                      ['', 'FOLIO FISCAL UUID', 'AED630FF-5168-4FFF-A3A5-077F707BA39E'],
-                      ['', 'SELLO DIGITAL', 'Wnl8bQigrN5ldr2jXf9UUxlGNYf56u/6oTUHz+bWkyOYOrojzrNGJF+imHpUxVg=='],
-                      ['SELLO DEL SAT',{colSpan: 2, text: 'eXO/3n0UaqleEN7EX/4Pv42gjwD4DH6JX/iIP23OeX7ocAUTcwkJgbHcYLQSiNU4UK6GnrCQ36PKkVJ3Dv2jxhx01gRv2ty4+hl1VjTD8w9p/BcGngRlGhDGjMKrbI4iqVpf30ysq5qLv8oyUMC107fniyvogFDUpqyO6yE6ArfM5FuJlUcnuF8fmFifvVq+vUmTGPuy9owoxDSUTZ+TC0Fs1UVQ4cNoyd9y5jqQJ2XGhuIYR8oSGCAAZzm1mnF+5yaX122l7kaf0HUvNlSEp0SLck9H8MGeogeUdZrDHdbKKCtQJ5ws8vGzkma01VL2PHzozmmbD7ve90G3rhMjaw=='}],
-                      ['CADENA ORIGINAL',{colSpan: 2, text: 'MIIGUjCCBDqgAwIBAgIUMDAwMDEwMDAwMDA0MDQxMjQyNTQwDQYJKoZIhvcNAQELBQAwggGyMAQ8AMIIBCgKCAQEAiyv5eDPY+iE/PR6ASq/PMFf6rHOGnSPx99j+MfBfXi4TEYBW4nhxG1sjlod3xf9VRPFzZGXVkT3K+1JEnYWnvBwWOk'}]
+                      [{colSpan: 1, rowSpan: 4, image: qr, fit: [100, 100]},'NUMERO SERIE CERTIFICADO',checkIfExists(json.timbreFiscalDigital.noCertificadoSAT)],
+                      ['', 'FECHA HORA CERTIFICACION', json.timbreFiscalDigital.fechaTimbrado ? json.timbreFiscalDigital.fechaTimbrado.substring(0,10) + json.timbreFiscalDigital.fechaTimbrado.substring(11,19) : ""],
+                      ['', 'FOLIO FISCAL UUID', checkIfExists(json.timbreFiscalDigital.uuid)],
+                      ['', 'SELLO DIGITAL', checkIfExists(json.timbreFiscalDigital.selloCFD)],
+                      ['SELLO DEL SAT',{colSpan: 2, text: checkIfExists(json.timbreFiscalDigital.selloSAT)}],
+                      ['CADENA ORIGINAL',{colSpan: 2, text: generateOriginalString()}]
                   ]
               },
   						layout: 'noBorders',
