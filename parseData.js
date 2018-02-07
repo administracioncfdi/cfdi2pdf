@@ -1,11 +1,5 @@
-var checkIfExists = function(parameter){
-  return parameter ? parameter : ""
-}
-
-var checkIfValue = function(parameter){
-  return parameter ? parameter : "0"
-}
-
+var checkIfValue = require("./check").checkIfValue
+var checkIfExists = require("./check").checkIfExists
 /**
 * Receives a parsed XML resulting from using the dependency xml2js
 * and returns the relevant information in a simple json (THIS IS ONLY VALID FOR 3.3)
@@ -29,21 +23,21 @@ var parseData = function(parsedXml){
     obj.metodoPago = checkIfExists(comprobante['$']['MetodoPago'])
     obj.condicionesDePago = checkIfExists(comprobante['$']['CondicionesDePago'])
     obj.confirmacion = checkIfExists(comprobante['$']['Confirmacion'])
+    //initializar el objeto emisor
+    obj.emisor = {}
     //obtner emisor del comprobante
     var comprobanteEmisor = comprobante['cfdi:Emisor']
     if(comprobanteEmisor){
-      //initializar el objeto emisor
-      obj.emisor = {}
       //generar objeto emisor
       obj.emisor.rfc = checkIfExists(comprobanteEmisor[0]['$']['Rfc'])
       obj.emisor.nombre = checkIfExists(comprobanteEmisor[0]['$']['Nombre'])
       obj.emisor.regimen = checkIfExists(comprobanteEmisor[0]['$']['RegimenFiscal'])
     }
+    //inicializar objeto receptor
+    obj.receptor = {}
     //obtener receptor del comprobante
     var comprobanteReceptor = comprobante['cfdi:Receptor']
     if(comprobanteReceptor){
-      //inicializar objeto receptor
-      obj.receptor = {}
       //generar objeto receptor
       obj.receptor.rfc = checkIfExists(comprobanteReceptor[0]['$']['Rfc'])
       obj.receptor.nombre = checkIfExists(comprobanteReceptor[0]['$']['Nombre'])
@@ -81,26 +75,28 @@ var parseData = function(parsedXml){
         })
       }
     }
+    //inicializar objeto cfdiRelacionado
+    obj.cfdiRelacionado = { }
     //obtener cfdiRelacionado del comprobante
     var comprobanteCfdiRelacionados = comprobante['cfdi:CfdiRelacionados']
     if(comprobanteCfdiRelacionados){
       var comprobanteCfdiRelacionado = comprobanteCfdiRelacionados[0]['cfdi:CfdiRelacionado']
       if(comprobanteCfdiRelacionado){
-        //inicializar objeto cfdiRelacionado
-        obj.cfdiRelacionado = {}
         //generar objeto CfdiRelacionado
         obj.cfdiRelacionado.tipoRelacion = checkIfExists(comprobanteCfdiRelacionados[0]['$']['TipoRelacion'])
         obj.cfdiRelacionado.uuid = checkIfExists(comprobanteCfdiRelacionado[0]['$']['UUID'])
       }
     }
+    //inicializar objeto timbreFiscalDigital
+    obj.timbreFiscalDigital = {}
     //obtener complemento del comprobante
     var comprobanteComplemento = comprobante['cfdi:Complemento']
+    console.log(comprobanteComplemento)
     if(comprobanteComplemento){
       //obtener el timbre fiscal digital del comprobante
       comprobanteTimbreFiscalDigital = comprobanteComplemento[0]['tfd:TimbreFiscalDigital']
+      console.log(comprobanteTimbreFiscalDigital)
       if(comprobanteTimbreFiscalDigital){
-        //inicializar objeto timbreFiscalDigital
-        obj.timbreFiscalDigital = {}
         //generar objecto timbreFiscalDigital
         obj.timbreFiscalDigital.uuid = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['UUID'])
         obj.timbreFiscalDigital.fechaTimbrado = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['FechaTimbrado'])
