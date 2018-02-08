@@ -12,9 +12,11 @@ var parseData = function(parsedXml){
   var comprobante = parsedXml['cfdi:Comprobante']
   if(comprobante){
     //obtener datos generales
+    obj.version = checkIfExists(comprobante['$']['Version'])
     obj.serie = checkIfExists(comprobante['$']['Serie'])
     obj.folio = checkIfExists(comprobante['$']['Folio'])
     obj.fecha = checkIfExists(comprobante['$']['Fecha'])
+    obj.noCertificado = checkIfExists(comprobante['$']['NoCertificado'])
     obj.lugar = checkIfExists(comprobante['$']['LugarExpedicion'])
     obj.tipoDeComprobante = checkIfExists(comprobante['$']['TipoDeComprobante'])
     obj.moneda = checkIfExists(comprobante['$']['Moneda'])
@@ -53,24 +55,38 @@ var parseData = function(parsedXml){
       var comprobanteConcepto = comprobanteConceptos[0]['cfdi:Concepto']
       if(comprobanteConcepto){
         obj.conceptos = comprobanteConcepto.map(function(concepto){
-          var traslado
+          var traslado, retencion
           var impuestos = concepto['cfdi:Impuestos']
           if(impuestos){
             var traslados = impuestos[0]['cfdi:Traslados']
+            var retenciones = impuestos[0]['cfdi:Retenciones']
             if(traslados){
               traslado = traslados[0]['cfdi:Traslado']
+            }
+            if(retenciones){
+              retencion = retenciones[0]['cfdi:Retencion']
             }
           }
           return {
             clave: checkIfExists(concepto['$']['ClaveProdServ']),
+            noIdentificacion: checkIfExists(concepto['$']['NoIdentificacion']),
             cantidad: checkIfValue(concepto['$']['Cantidad']),
             valorUnitario: checkIfValue(concepto['$']['ValorUnitario']),
-            unidad: checkIfExists(concepto['$']['ClaveUnidad']),
+            claveUnidad: checkIfExists(concepto['$']['ClaveUnidad']),
+            unidad: checkIfExists(concepto['$']['Unidad']),
             importe: checkIfValue(concepto['$']['Importe']),
             descripcion: checkIfExists(concepto['$']['Descripcion']),
             descuento: checkIfValue(concepto['$']['Descuento']),
-            impuesto: traslado ? checkIfExists(traslado[0]['$']['Impuesto']) : "",
-            importeImpuesto: traslado ? checkIfValue(traslado[0]['$']['Importe']) : "0"
+            baseTraslado: traslado ? checkIfValue(traslado[0]['$']['Base']) : "",
+            impuestoTraslado: traslado ? checkIfExists(traslado[0]['$']['Impuesto']) : "",
+            tipoFactorTraslado: traslado ? checkIfExists(traslado[0]['$']['TipoFactor']) : "",
+            tasaOCuotaTraslado: traslado ? checkIfValue(traslado[0]['$']['TasaOCuota']) : "",
+            importeTraslado: traslado ? checkIfValue(traslado[0]['$']['Importe']) : "",
+            baseRetencion: retencion ? checkIfValue(retencion[0]['$']['Base']) : "",
+            impuestoRetencion: retencion ? checkIfExists(retencion[0]['$']['Impuesto']) : "",
+            tipoFactorRetencion: retencion ? checkIfExists(retencion[0]['$']['TipoFactor']) : "",
+            tasaOCuotaRetencion: retencion ? checkIfValue(retencion[0]['$']['TasaOCuota']) : "",
+            importeRetencion: retencion ? checkIfValue(retencion[0]['$']['Importe']) : ""
           }
         })
       }
@@ -109,9 +125,34 @@ var parseData = function(parsedXml){
     obj.descuento = checkIfValue(comprobante['$']['Descuento'])
     //obtener total
     obj.total = checkIfValue(comprobante['$']['Total'])
+    //inizializar arreglos de Impuestos
+    obj.traslados = []
+    obj.retenciones = []
     //obtener impuestos del comprobante
     var comprobanteImpuestos = comprobante['cfdi:Impuestos']
     if(comprobanteImpuestos){
+      var traslados = comprobanteImpuestos[0]['cfdi:Traslados']
+      var retenciones = comprobanteImpuestos[0]['cfdi:Retenciones']
+      if(traslados){
+        var traslado = traslados[0]['cfdi:Traslado']
+        for(var i = 0; i < traslado.length; i++){
+          obj.traslados.push({
+            impuesto: traslado[i]['$']['Impuesto'],
+            tipoFactor: traslado[i]['$']['TipoFactor'],
+            tasaOCuota: traslado[i]['$']['TasaOCuota'],
+            importe: traslado[i]['$']['Importe']
+          })
+        }
+      }
+      if(retenciones){
+        var retencion = retenciones[0]['cfdi:Retencion']
+        for(var i = 0; i < retencion.length; i++){
+          obj.retenciones.push({
+            impuesto: retencion[i]['$']['Impuesto'],
+            importe: retencion[i]['$']['Importe']
+          })
+        }
+      }
       obj.totalImpuestosRetenidos = checkIfValue(comprobanteImpuestos[0]['$']['TotalImpuestosRetenidos'])
       obj.totalImpuestosTrasladados = checkIfValue(comprobanteImpuestos[0]['$']['TotalImpuestosTrasladados'])
     }
