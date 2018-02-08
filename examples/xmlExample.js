@@ -1,4 +1,5 @@
-/* EXAMPLE 1 */
+// EXAMPLE 1
+ ///*
 var xmlExample = `
 <cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd" LugarExpedicion="78250" MetodoPago="PUE" TipoDeComprobante="I" Total="870.00" Moneda="MXN" Certificado="MIIEYjCCA0qgAwIBAgIUMDAwMDEwMDAwMDAzMDMxOTgzMTIwDQYJKoZIhvcNAQEFBQAwggGKMTgwNgYDVQQDDC9BLkMuIGRlbCBTZXJ2aWNpbyBkZSBBZG1pbmlzdHJhY2nDs24gVHJpYnV0YXJpYTEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExODA2BgNVBAsML0FkbWluaXN0cmFjacOzbiBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpw7NuMR8wHQYJKoZIhvcNAQkBFhBhY29kc0BzYXQuZ29iLm14MSYwJAYDVQQJDB1Bdi4gSGlkYWxnbyA3NywgQ29sLiBHdWVycmVybzEOMAwGA1UEEQwFMDYzMDAxCzAJBgNVBAYTAk1YMRkwFwYDVQQIDBBEaXN0cml0byBGZWRlcmFsMRQwEgYDVQQHDAtDdWF1aHTDqW1vYzEVMBMGA1UELRMMU0FUOTcwNzAxTk4zMTUwMwYJKoZIhvcNAQkCDCZSZXNwb25zYWJsZTogQ2xhdWRpYSBDb3ZhcnJ1YmlhcyBPY2hvYTAeFw0xNDAzMDUxODA5MjVaFw0xODAzMDUxODA5MjVaMIGuMSEwHwYDVQQDExhFTlJJUVVFIEhJREFMR08gR09OWkFMRVoxITAfBgNVBCkTGEVOUklRVUUgSElEQUxHTyBHT05aQUxFWjEhMB8GA1UEChMYRU5SSVFVRSBISURBTEdPIEdPTlpBTEVaMRYwFAYDVQQtEw1ISUdFNTcwOTI3VUoxMRswGQYDVQQFExJISUdFNTcwOTI3SFNQRE5OMDgxDjAMBgNVBAsTBVVOSUNBMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCESYjzJhvbPxIG1szSuBpUx8bnumnYuViSeXIObqkaxrqDzaspTbw8bp7Eh8UgagRpE/fbeG8FmDUKkyeKWMaze6EJbg2pmtbQgeLxYwLmgJO+XMBSNNN3u+lGstQi/++5y2lHt+smfuphkKXaGjmZV04rMYAomV00C+B/9kNVlQIDAQABox0wGzAMBgNVHRMBAf8EAjAAMAsGA1UdDwQEAwIGwDANBgkqhkiG9w0BAQUFAAOCAQEAUzNfH2cfeTfQ0W2Rhzyf7J5DOW4bdyA4uCXLgGn/xiybUnm1GbY4gjO79aT8iUHEgr8cziir3jB8eituiyAmfNAAXuwUCiX8G5k9PeSJmwf+dSOLxuunlarxBnFeYrKW3i9Uu4idkdq+1b6XfSM5E/lsanIiDivuF0T6d6RiOfJbwpmaJBVqka8GaZ38s0pwr2fgBWfS0Vvxk2R9zPf5G6/OnvWKsHfhcRnh1Gag0w1W7Cylo+kEDnCu0nljFeQI7jJccRPdJWYEWTSYnoNIsGTJyCcTEiWowO2L9Q2YPkCv0F4SKKZ1C+/jP2HkHc65LR1mGVFug5KFS3dNft32gQ==" SubTotal="750.00" CondicionesDePago="CONTADO" NoCertificado="00001000000303198312" FormaPago="01" Sello="buHpqvcsycI7BtM3MAyz6vejrTfR4+MNmAwAg5eOOBI0j3Hx0sEr2Tw2PX38XCn1S0oYfXEVelRM+AK1dG04kGa+kzGG2L0aKWdv9lRkJKNWpua1wofji+DkszU21CTQdmRTfWD+GxNITN24Zr8ryQjxoj3cv2ByKpQ73tE5Kwc=" Fecha="2018-01-04T11:09:38" Folio="1280" Version="3.3">
   <cfdi:Emisor Rfc="HIGE570927UJ1" Nombre="ENRIQUE HIDALGO GONZALEZ" RegimenFiscal="621"/>
@@ -21,8 +22,10 @@ var xmlExample = `
     <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="8A45599F-3BB2-40BD-ACA3-D4902358FF99" FechaTimbrado="2018-01-04T11:13:13" RfcProvCertif="SAT970701NN3" SelloCFD="buHpqvcsycI7BtM3MAyz6vejrTfR4+MNmAwAg5eOOBI0j3Hx0sEr2Tw2PX38XCn1S0oYfXEVelRM+AK1dG04kGa+kzGG2L0aKWdv9lRkJKNWpua1wofji+DkszU21CTQdmRTfWD+GxNITN24Zr8ryQjxoj3cv2ByKpQ73tE5Kwc=" NoCertificadoSAT="00001000000403258748" SelloSAT="bSf4J3F/ZMWIjpSrSN8Hhu8/PdGknirDRX4ppI80TAG/CE34nnNLskMELGz/U4emlOQoCgpbhaRKnUsoj9954wNkX6EEM3UovUpPvtkNvDwFUhgtxtha8DIjYlG1bY/u3EDS8xQ/JcTFypOB3Lu+xbIHsQ0wdFgH6TgP7a5Fb4PSwIQIcvw8mvrlygzIWwEqg0HMUh2O/Zi4DMBsZ8mC1Fb56Mp/iAzO5pKKDKrgTAEK7z79nYwJIJ3pDkrmourkTIlQD3FQL3Exk3PAjEEXgNPwEojbpVYLEgT/ZcMH//aSPR0zZmVMEhSupawWFpPsI2c+57qk2A4Nv5UcWeyEAw=="/>
   </cfdi:Complemento>
 </cfdi:Comprobante>`
+ //*/
 
-/* EXAMPLE 2
+// EXAMPLE 2
+/*
 var xmlExample = `
 <?xml version="1.0" encoding="UTF-8"?>
 <cfdi:Comprobante
@@ -37,7 +40,7 @@ var xmlExample = `
   <cfdi:CfdiRelacionados TipoRelacion="02">
     <cfdi:CfdiRelacionado UUID="ED1752FE-E865-4FF2-BFE1-0F552E770DC9"/>
   </cfdi:CfdiRelacionados>
-    <cfdi:Emisor Rfc=" AAA010101AAA" Nombre="Esta es una demostración" RegimenFiscal="622"/>
+    <cfdi:Emisor Rfc="AAA010101AAA" Nombre="Esta es una demostración" RegimenFiscal="622"/>
     <cfdi:Receptor Rfc="BASJ600902KL9" Nombre="Juanito Bananas De la Sierra" ResidenciaFiscal="MEX"
   NumRegIdTrib="987654321" UsoCFDI="G03"/>
     <cfdi:Conceptos>
