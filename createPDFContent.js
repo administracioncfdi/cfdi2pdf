@@ -17,7 +17,7 @@ var generateConceptsTable = function(conceptos){
     return [concepto.clave, concepto.cantidad, concepto.claveUnidad, claveUnidadCatalogue[concepto.claveUnidad], concepto.descripcion, "$ " + concepto.valorUnitario, "$ " + concepto.descuento,
     impuestoCatalogue[concepto.impuestoTraslado] ? concepto.impuestoTraslado + " - " + impuestoCatalogue[concepto.impuestoTraslado] : "", "$ " + concepto.importeTraslado, "$ " + concepto.importe ]
   })
-  arr.unshift(['ClaveProdServ','Cantidad','Clave Unidad','Unidad','Descripción','Valor Unitario','Descuento',{colSpan: 2, text: 'Impuesto'},'','Importe'])
+  arr.unshift(['ClaveProdServ','Cant','Clave Unidad','Unidad','Descripción','Valor Unitario','Descuento',{colSpan: 2, text: 'Impuesto'},'','Importe'])
   arr.unshift([{text: 'PARTIDAS DEL COMPROBANTE', style: 'tableHeader', colSpan: 10, alignment: 'center'},{},{},{},{},{},{},{},{},{}])
   return arr
 }
@@ -38,14 +38,14 @@ var generateStampTable = function(json){
   var arr = []
   if(json.timbreFiscalDigital){
     arr = [
-          [{colSpan: 1, rowSpan: 4, qr: generateQrCode(json) , fit:150},'NUMERO SERIE CERTIFICADO',checkIfExists(json.timbreFiscalDigital.noCertificadoSAT)],
+          [{colSpan: 1, rowSpan: 6, qr: generateQrCode(json) , fit:140},'NUMERO SERIE CERTIFICADO',checkIfExists(json.timbreFiscalDigital.noCertificadoSAT)],
           ['', 'FECHA HORA CERTIFICACION', json.timbreFiscalDigital.fechaTimbrado ? json.timbreFiscalDigital.fechaTimbrado.substring(0,10) + json.timbreFiscalDigital.fechaTimbrado.substring(11,19) : ""],
           ['', 'FOLIO FISCAL UUID', checkIfExists(json.timbreFiscalDigital.uuid)],
           ['', 'SELLO DIGITAL', checkIfExists(json.timbreFiscalDigital.selloCFD)],
-          ['SELLO DEL SAT',{colSpan: 2, text: checkIfExists(json.timbreFiscalDigital.selloSAT)}]
+          ['','SELLO DEL SAT',checkIfExists(json.timbreFiscalDigital.selloSAT)]
       ]
   }
-  arr.push(['CADENA ORIGINAL:',{colSpan: 2, text: generateOriginalString(json)}])
+  arr.push(['','CADENA ORIGINAL:',generateOriginalString(json)])
   return arr
 }
 
@@ -60,8 +60,10 @@ var createPDFContent = function(json, image){
   	content: [
   	    {
   		    alignment: 'center',
+          style: 'tableContent',
   		    table: {
           		widths: ['*','auto','auto'],
+              fontSize: 9,
           		body: [
           			[{rowSpan: 5, image: logo, fit: [260, 260]},'SERIE:','A'],
           			['','FOLIO:', json.serie + json.folio],
@@ -75,6 +77,7 @@ var createPDFContent = function(json, image){
   		},
   		'\n',
           {
+            style: 'tableContent',
               table: {
                   widths: ['auto','*','auto','auto'],
                   body: [
@@ -88,6 +91,7 @@ var createPDFContent = function(json, image){
           },
   		'\n',
           {
+            style: 'tableContent',
               table: {
                   widths: ['auto','*','auto','auto'],
                   body: [
@@ -102,6 +106,7 @@ var createPDFContent = function(json, image){
           },
   		'\n',
           {
+              style: 'tableContent',
               table: {
                   widths: [95,'*',95,'*'],
                   body: [
@@ -116,8 +121,9 @@ var createPDFContent = function(json, image){
           },
   		'\n',
       {
+        style: 'tableList',
         table: {
-            widths: [55,50,40,40,65,50,40,25,30,40],
+            widths: ['auto','auto','auto','auto','*','auto','auto','auto','auto','auto'],
             body: generateConceptsTable(json.conceptos)
         },
         layout: {
@@ -128,6 +134,7 @@ var createPDFContent = function(json, image){
       },
   		'\n',
           {
+            style: 'tableContent',
               table: {
                   widths: ['auto','*','auto','*'],
                   body: [
@@ -144,8 +151,9 @@ var createPDFContent = function(json, image){
           },
   		'\n',
           {
+            style: 'tableSat',
               table: {
-                  widths: [150,100,237],
+                  widths: ['auto','auto','*'],
                   body: generateStampTable(json)
               },
               layout: 'noBorders',
@@ -153,23 +161,25 @@ var createPDFContent = function(json, image){
           }
   	],
   	styles: {
-  		header: {
-  			fontSize: 18,
-  			bold: true,
-  			margin: [0, 0, 0, 10]
-  		},
-  		subheader: {
-  			fontSize: 16,
-  			bold: true,
-  			margin: [0, 10, 0, 5]
-  		},
-  		tableExample: {
-  			margin: [0, 5, 0, 15]
-  		},
   		tableHeader: {
   			bold: true,
-  			fontSize: 13,
+  			fontSize: 10,
   			color: 'black'
+  		},
+      tableContent: {
+  			fontSize: 8,
+  			color: 'black',
+        alignment: 'left'
+  		},
+      tableList: {
+  			fontSize: 7,
+  			color: 'black',
+        alignment: 'center'
+  		},
+      tableSat: {
+  			fontSize: 5,
+  			color: 'black',
+        alignment: 'left'
   		}
   	},
   	defaultStyle: {
