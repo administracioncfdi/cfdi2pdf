@@ -41,10 +41,13 @@ Here is an example using express:
 		    bolditalics: './fonts/Roboto-MediumItalic.ttf'
 	    }
     };
+    //the image must be a base 64 string
+    var image = ""  
     var options = {
-      fonts:fonts,
-      image:"base64" //the image is optional
-    };
+          fonts:fonts,
+          image:image //the image is optional
+        };
+    var xml = "" //the xml in string  
     app.get('/', function (req, res) {
-        cfdi2pdf.createPDFServer(xml,res,options)
+      cfdi2pdf.createPDFServer(xml,res, options)
     });

@@ -20,7 +20,7 @@ var PdfPrinter = require('pdfmake/src/printer');
 */
 var createPDFServer = function(xml, response, options){
   if(options.fonts){
-    xml = xmlExample //EXAMPLE
+    //xml = xmlExample //EXAMPLE
     return parseString(xml, function(err, res){
       if(res){
         var json = parseData(res)
