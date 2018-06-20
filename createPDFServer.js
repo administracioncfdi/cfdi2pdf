@@ -15,8 +15,8 @@ var PdfPrinter = require('pdfmake/src/printer');
 /**
 * creates a pdf of a received cfdi xml in the client
 * @param {String} xml xml in string
-* @param {Object} font fonts to be used for pdfMake
 * @param {Object} response response sent from the server to the client
+* @param {Object} options options
 */
 var createPDFServer = function(xml, response, options){
   if(options.fonts){
@@ -37,7 +37,7 @@ var createPDFServer = function(xml, response, options){
       }
     })
   }else{
-    throw "You need to define the fonts to be used in the options"
+    throw new Error("You need to define the fonts to be used in the options")
   }
 }
 
