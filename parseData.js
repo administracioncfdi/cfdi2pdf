@@ -33,7 +33,7 @@ var parseData = function(parsedXml){
       //generar objeto emisor
       obj.emisor.rfc = checkIfExists(comprobanteEmisor[0]['$']['Rfc'])
       obj.emisor.nombre = checkIfExists(comprobanteEmisor[0]['$']['Nombre'])
-      obj.emisor.regimenFiscal = checkIfExists(comprobanteEmisor[0]['$']['RegimenFiscal'])
+      obj.emisor.regimen = checkIfExists(comprobanteEmisor[0]['$']['RegimenFiscal'])
     }
     //inicializar objeto receptor
     obj.receptor = {}
