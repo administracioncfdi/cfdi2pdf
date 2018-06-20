@@ -4,10 +4,10 @@ var generatePipe = function(campo){
 
 var generateOriginalString = function(json){
   var cadenaOriginal = "||"
-  cadenaOriginal += generatePipe(json.version)
   switch(json.tipoDeComprobante){
     case "I" :
     case "E" :
+      cadenaOriginal += generatePipe(json.version)
       cadenaOriginal += generatePipe(json.serie)
       cadenaOriginal += generatePipe(json.folio)
       cadenaOriginal += generatePipe(json.fecha)
@@ -68,13 +68,14 @@ var generateOriginalString = function(json){
       cadenaOriginal += generatePipe(json.totalImpuestosTrasladados)
       break;
     case "P" :
+      cadenaOriginal += generatePipe(json.timbreFiscalDigital.version)
       cadenaOriginal += generatePipe(json.timbreFiscalDigital.uuid)
       cadenaOriginal += generatePipe(json.fecha)
       cadenaOriginal += generatePipe(json.timbreFiscalDigital.selloSAT)
       cadenaOriginal += generatePipe(json.timbreFiscalDigital.noCertificadoSAT)
       break;
     default:
-      throw new Error("El módulo no tiene soporte para el tipo de comprobante \"" + json.tipoDeComprobante + "\"")
+      throw new Error("This module does not support invoices with TipoDeComprobante: \"" + json.tipoDeComprobante + "\"")
   }
   cadenaOriginal += "|"
   console.log(cadenaOriginal)
