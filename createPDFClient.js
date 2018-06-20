@@ -17,13 +17,14 @@ require('pdfmake/build/vfs_fonts.js');
 * creates a pdf of a received cfdi xml in the client
 * @param {String} xml xml in string
 */
-var createPDFClient = function(xml){
+var createPDFClient = function(xml, options){
+  options = options || { image: null }
   //xml = xmlExample //EXAMPLE
   parseString(xml, function(err, res){
     if(res){
       var json = parseData(res)
       console.log(json)
-      var content = createPDFContent(json)
+      var content = createPDFContent(json, options.image)
       console.log(content)
       pdfMake.createPdf(content).open()
       //pdfMake.createPdf(pdfmakeExmaple).open() //EXAMPLE
