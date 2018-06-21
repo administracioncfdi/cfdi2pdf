@@ -107,7 +107,7 @@ var parseData = function(parsedXml){
     var comprobanteComplemento = comprobante['cfdi:Complemento']
     if(comprobanteComplemento){
       //obtener el timbre fiscal digital del comprobante
-      comprobanteTimbreFiscalDigital = comprobanteComplemento[0]['tfd:TimbreFiscalDigital']
+      var comprobanteTimbreFiscalDigital = comprobanteComplemento[0]['tfd:TimbreFiscalDigital']
       if(comprobanteTimbreFiscalDigital){
         //inicializar objeto timbreFiscalDigital
         obj.timbreFiscalDigital = {}
@@ -117,6 +117,39 @@ var parseData = function(parsedXml){
         obj.timbreFiscalDigital.selloSAT = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['SelloSAT'])
         obj.timbreFiscalDigital.selloCFD = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['SelloCFD'])
         obj.timbreFiscalDigital.noCertificadoSAT = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['NoCertificadoSAT'])
+        obj.timbreFiscalDigital.version = checkIfExists(comprobanteTimbreFiscalDigital[0]['$']['Version'])
+      }
+      //inizializar arreglo de pagos
+      obj.pagos = []
+      //obtener pagos
+      var comprobantePagos = comprobanteComplemento[0]['pago10:Pagos']
+      if(comprobantePagos){
+        var comprobantePago = comprobantePagos[0]['pago10:Pago']
+        if(comprobantePago){
+          obj.pagos = comprobantePago.map(function(pago){
+            var doctoRelacionado = pago['pago10:DoctoRelacionado']
+            var obj = {}
+            obj.fecha = pago['$']['FechaPago'],
+            obj.formaPago = pago['$']['FormaDePagoP']
+            obj.moneda = pago['$']['MonedaP']
+            obj.monto = pago['$']['Monto']
+            obj.doctoRelacionados = []
+            if(doctoRelacionado){
+              obj.doctoRelacionados = doctoRelacionado.map(function(doc){
+                return {
+                  uuid: doc['$']['IdDocumento'],
+                  moneda: doc['$']['MonedaDR'],
+                  metodoDePago: doc['$']['MetodoDePagoDR'],
+                  numParcialidad: doc['$']['NumParcialidad'],
+                  saldoAnterior: doc['$']['ImpSaldoAnt'],
+                  importePagado: doc['$']['ImpPagado'],
+                  saldoInsoluto: doc['$']['ImpSaldoInsoluto']
+                }
+              })
+            }
+            return obj
+          })
+        }
       }
     }
     //obtener subtotal
@@ -156,6 +189,8 @@ var parseData = function(parsedXml){
       obj.totalImpuestosRetenidos = checkIfValue(comprobanteImpuestos[0]['$']['TotalImpuestosRetenidos'])
       obj.totalImpuestosTrasladados = checkIfValue(comprobanteImpuestos[0]['$']['TotalImpuestosTrasladados'])
     }
+  }else{
+    throw new Error("Couldn't obtain element \"Comprobante\" from invoice")
   }
   return obj
 }
