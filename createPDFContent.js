@@ -24,7 +24,7 @@ var generateConceptsTable = function(conceptos){
 
 var generateRelatedDocs = function(docs){
   var arr = docs.map(function(doc){
-    return [doc.uuid, doc.numParcialidad, "$ " + doc.saldoAnterior, "$ " + doc.importePagado, "$ " doc.saldoInsoluto]
+    return [doc.uuid, doc.numParcialidad, "$ " + doc.saldoAnterior, "$ " + doc.importePagado, "$ " + doc.saldoInsoluto]
   })
   arr.unshift(['UUID','Num. Parcialidad','Importe Saldo Anterior','Importe Pagado','Importe Saldo Insoluto'])
   arr.unshift([{text: 'DOCUMENTOS RELACIONADOS', style: 'tableHeader', colSpan: 5, alignment: 'center'},{},{},{},{}])
