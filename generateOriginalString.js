@@ -4,7 +4,7 @@ var generatePipe = function(campo){
 
 var generateOriginalString = function(json){
   var cadenaOriginal = "||"
-  switch(json.tipoDeComprobante){
+  switch(json.tipoDeComprobante.toUppercase()){
     case "I" :
     case "E" :
       cadenaOriginal += generatePipe(json.version)
