@@ -47,7 +47,7 @@ var generatePayments = function(pagos){
       },
       "\n",
       {
-          style: 'tableList',
+        style: 'tableList',
         table: {
             widths: ['*','auto',75,75,75],
             body: generateRelatedDocs(pago.doctoRelacionados)
@@ -55,9 +55,11 @@ var generatePayments = function(pagos){
         layout: {
           fillColor: function (i, node) {
             return (i % 2 != 0) ? '#CCCCCC' : null;
-        },
-        "\n"
-     }]
+          }
+        }
+      },
+      "\n"
+      ]
   })
   return [].concat.apply([], arr)
 }
@@ -70,7 +72,6 @@ var generateQrCode = function(json){
     .replace("{rr}", json.receptor.rfc)
     .replace("{tt}", json.total)
     .replace("{fe}", json.timbreFiscalDigital.selloCFD.substring(json.timbreFiscalDigital.selloCFD.length - 8, json.timbreFiscalDigital.selloCFD.length))
-    console.log(qrCode)
   return qrCode
 }
 
@@ -90,7 +91,7 @@ var generateStampTable = function(json){
 }
 
 //generate content array used in PDFMake
-var generateContent = function(json, image){
+var generateContent = function(json, logo){
   var content = []
   //this block contains the logo image and general information
   content.push({
@@ -142,22 +143,25 @@ var generateContent = function(json, image){
   })
   //space
   content.push('\n')
-  //this block contains general info. about the invoice
-  content.push({
-      style: 'tableContent',
-      table: {
-          widths: [95,'*',95,'*'],
-          body: [
-              [{text: 'DATOS GENERALES DEL COMPROBANTE', style: 'tableHeader', colSpan: 4, alignment: 'center'}, {}, {},{}],
-              ['MONEDA:', monedaCatalogue[json.moneda] ? json.moneda + " - " + monedaCatalogue[json.moneda] : "" ,'FORMA PAGO:', formaPagoCatalogue[json.formaPago] ? json.formaPago + " - " + formaPagoCatalogue[json.formaPago] : "" ],
-              ['TIPO DE CAMBIO:', json.tipoCambio,'CONDICIONES DE PAGO:', json.condicionesDePago],
-              ['CLAVE CONFIRMACION:', json.confirmacion,'METODO DE PAGO:', metodoPagoCatalogue[json.metodoPago] ? json.metodoPago + " - " + metodoPagoCatalogue[json.metodoPago] : ""]
-          ]
-      },
-      layout: 'lightHorizontalLines'
-  })
-  //space
-  content.push('\n')
+  //check type of invoice
+  if(json.tipoDeComprobante.toUpperCase() == "I" || json.tipoDeComprobante.toUpperCase() == "E"){
+    //this block contains general info. about the invoice
+    content.push({
+        style: 'tableContent',
+        table: {
+            widths: [95,'*',95,'*'],
+            body: [
+                [{text: 'DATOS GENERALES DEL COMPROBANTE', style: 'tableHeader', colSpan: 4, alignment: 'center'}, {}, {},{}],
+                ['MONEDA:', monedaCatalogue[json.moneda] ? json.moneda + " - " + monedaCatalogue[json.moneda] : "" ,'FORMA PAGO:', formaPagoCatalogue[json.formaPago] ? json.formaPago + " - " + formaPagoCatalogue[json.formaPago] : "" ],
+                ['TIPO DE CAMBIO:', json.tipoCambio,'CONDICIONES DE PAGO:', json.condicionesDePago],
+                ['CLAVE CONFIRMACION:', json.confirmacion,'METODO DE PAGO:', metodoPagoCatalogue[json.metodoPago] ? json.metodoPago + " - " + metodoPagoCatalogue[json.metodoPago] : ""]
+            ]
+        },
+        layout: 'lightHorizontalLines'
+    })
+    //space
+    content.push('\n')
+  }
   //this block contains the concepts of the invoice
   content.push({
     style: 'tableList',
@@ -174,7 +178,7 @@ var generateContent = function(json, image){
   //space
   content.push('\n')
   //check type of invoice
-  if(json.tipoDeComprobante.toUppercase() == "I" || json.tipoDeComprobante.toUppercase() == "E"){
+  if(json.tipoDeComprobante.toUpperCase() == "I" || json.tipoDeComprobante.toUpperCase() == "E"){
     //this block contains currency related info.
     content.push({
       style: 'tableContent',
@@ -195,13 +199,9 @@ var generateContent = function(json, image){
     content.push('\n')
   }
   //check type of invoice
-  if(json.tipoDeComprobante.toUppercase() == "P"){
+  if(json.tipoDeComprobante.toUpperCase() == "P"){
     //this block contains info. about payment
-    content.concat(generatePayments(json.pagos))
-
-      //this block contains info. about related docs
-    //space
-    content.push('\n')
+    content = content.concat(generatePayments(json.pagos))
   }
   //this block contains info. about the stamp
   content.push({
@@ -223,7 +223,7 @@ var createPDFContent = function(json, image){
   //look for a base64 image
   var logo = image ? image : require("./examples/defaultImage.js")
   var dd = {
-  	content: generateContent(json, image),
+  	content: generateContent(json, logo),
   	styles: {
   		tableHeader: {
   			bold: true,
