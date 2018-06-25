@@ -19,13 +19,14 @@ var PdfPrinter = require('pdfmake/src/printer');
 * @param {Object} options options
 */
 var createPDFServer = function(xml, response, options){
+  options = options || {}
   if(options.fonts){
     //xml = xmlExample //EXAMPLE
     return parseString(xml, function(err, res){
       if(res){
         var json = parseData(res)
         console.log(json)
-        var content = createPDFContent(json, options.image)
+        var content = createPDFContent(json, options)
         console.log(content)
         var printer = new PdfPrinter(options.fonts);
         var doc = printer.createPdfKitDocument(content);

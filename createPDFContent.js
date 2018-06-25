@@ -91,7 +91,7 @@ var generateStampTable = function(json){
 }
 
 //generate content array used in PDFMake
-var generateContent = function(json, logo){
+var generateContent = function(json, logo, text){
   var content = []
   //this block contains the logo image and general information
   content.push({
@@ -203,6 +203,22 @@ var generateContent = function(json, logo){
     //this block contains info. about payment
     content = content.concat(generatePayments(json.pagos))
   }
+  if(text){
+    //observations
+    content.push({
+      style: 'tableContent',
+      table: {
+          widths: ['*'],
+          body: [
+              [{text: 'OBSERVACIONES', style: 'tableHeader'}],
+              [text]
+          ]
+      },
+      layout: 'lightHorizontalLines'
+    })
+    //space
+    content.push('\n')
+  }
   //this block contains info. about the stamp
   content.push({
     style: 'tableSat',
@@ -219,11 +235,11 @@ var generateContent = function(json, logo){
 * Receives a json and returns a pdf content object for pdfmake
 * @param {Object} json result json from using parseData function
 */
-var createPDFContent = function(json, image){
+var createPDFContent = function(json, options){
   //look for a base64 image
-  var logo = image ? image : require("./examples/defaultImage.js")
+  var logo = options.image || require("./examples/defaultImage.js")
   var dd = {
-  	content: generateContent(json, logo),
+  	content: generateContent(json, logo, options.text),
   	styles: {
   		tableHeader: {
   			bold: true,

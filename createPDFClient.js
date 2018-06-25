@@ -18,13 +18,13 @@ require('pdfmake/build/vfs_fonts.js');
 * @param {String} xml xml in string
 */
 var createPDFClient = function(xml, options){
-  options = options || { image: null }
+  options = options || {}
   //xml = xmlExample //EXAMPLE
   parseString(xml, function(err, res){
     if(res){
       var json = parseData(res)
       console.log(json)
-      var content = createPDFContent(json, options.image)
+      var content = createPDFContent(json, options)
       console.log(content)
       pdfMake.createPdf(content).open()
       //pdfMake.createPdf(pdfmakeExmaple).open() //EXAMPLE
