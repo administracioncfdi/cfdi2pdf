@@ -1,5 +1,4 @@
 ##  README
-<hr>
 version 1.1
 
 **cdfi2pdf** creates a pdf based on an XML CFDI. It uses pdfmake and xml2js as dependencies.
