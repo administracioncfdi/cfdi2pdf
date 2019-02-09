@@ -18,7 +18,7 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://CarlosQT@bitbucket.org/quadtree/cfdi2pdf.git"
+    "url": "https://github.com/administracioncfdi/cfdi2pdf"
   },
-  "homepage": "https://bitbucket.org/quadtree/cfdi2pdf#readme"
+  "homepage": "https://github.com/administracioncfdi/cfdi2pdf"
 }
