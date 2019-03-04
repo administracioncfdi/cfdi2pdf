@@ -1,6 +1,6 @@
-var metodoPagoCatalogue = {
-  'PUE': 'Pago en una sola exhibición',
-  'PPD': 'Pago en parcialidades o diferido'
-}
+const metodoPagoCatalogue = {
+  PUE: 'Pago en una sola exhibición',
+  PPD: 'Pago en parcialidades o diferido',
+};
 
-module.exports = metodoPagoCatalogue
+module.exports = metodoPagoCatalogue;

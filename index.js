@@ -1,4 +1,4 @@
-var createPDFClient = require("./createPDFClient")
-var createPDFServer = require("./createPDFServer")
+const createPDFClient = require('./createPDFClient');
+const createPDFServer = require('./createPDFServer');
 
-module.exports = { createPDFClient:createPDFClient, createPDFServer:createPDFServer }
+module.exports = { createPDFClient, createPDFServer };

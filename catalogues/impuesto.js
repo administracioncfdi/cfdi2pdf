@@ -1,7 +1,7 @@
-var impuestoCatalogue = {
+const impuestoCatalogue = {
   '001': 'ISR',
   '002': 'IVA',
-  '003': 'IEPS'
-}
+  '003': 'IEPS',
+};
 
-module.exports = impuestoCatalogue
+module.exports = impuestoCatalogue;

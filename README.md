@@ -103,5 +103,3 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## Made with love at Quad Tree / SLP / Mexico
 by: Manuel Garcia, Carlos Alvarez, Enrique Motilla
 visit our project at:  https://erpcloud.mx
-
-feb, 2018
