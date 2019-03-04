@@ -1,9 +1,4 @@
-var checkIfExists = function(parameter){
-  return parameter ? parameter : ""
-}
+const checkIfExists = parameter => parameter || '';
+const checkIfValue = parameter => parameter || '0';
 
-var checkIfValue = function(parameter){
-  return parameter ? parameter : "0"
-}
-
-module.exports = { checkIfValue: checkIfValue, checkIfExists: checkIfExists }
+module.exports = { checkIfValue, checkIfExists };

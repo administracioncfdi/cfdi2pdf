@@ -1,5 +1,5 @@
 // EXAMPLE
-var xmlExample = `
+const xmlExample = `
 <?xml version="1.0" encoding="UTF-8"?>
 <cfdi:Comprobante
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -81,6 +81,6 @@ var xmlExample = `
         </cfdi:Traslados>
     </cfdi:Impuestos>
 </cfdi:Comprobante>
-`
+`;
 
-module.exports = xmlExample
+module.exports = xmlExample;

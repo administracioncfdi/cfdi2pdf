@@ -1,16 +1,16 @@
-//import necesary functions
-var parseData = require("./parseData")
-var createPDFContent = require("./createPDFContent")
+// import necesary functions
+const parseData = require('./parseData');
+const createPDFContent = require('./createPDFContent');
 
-//EXAMPLE---------------------------
-var pdfmakeExample = require("./examples/pdfmakeExample")
-var xmlExample = require("./examples/xmlExample")
+// EXAMPLE---------------------------
+const pdfmakeExample = require('./examples/pdfmakeExample');
+const xmlExample = require('./examples/xmlExample');
 //----------------------------------
 
-//require parseString
-var parseString = require('xml2js').parseString; //Conversion de xml a objeto de javascript
-//require pdfmake
-var PdfPrinter = require('pdfmake/src/printer');
+// require parseString
+const { parseString } = require('xml2js'); // Conversion de xml a objeto de javascript
+// require pdfmake
+const PdfPrinter = require('pdfmake/src/printer');
 
 /**
 * creates a pdf of a received cfdi xml in the client
@@ -18,28 +18,27 @@ var PdfPrinter = require('pdfmake/src/printer');
 * @param {Object} response response sent from the server to the client
 * @param {Object} options options
 */
-var createPDFServer = function(xml, response, options){
-  options = options || {}
-  if(options.fonts){
-    //xml = xmlExample //EXAMPLE
-    return parseString(xml, function(err, res){
-      if(res){
-        var json = parseData(res)
-        console.log(json)
-        var content = createPDFContent(json, options)
-        console.log(content)
-        var printer = new PdfPrinter(options.fonts);
-        var doc = printer.createPdfKitDocument(content);
-        //var doc = printer.createPdfKitDocument(pdfmakeExample) //EXAMPLE
-        doc.pipe(response)
-        doc.end()
-      }else{
-        throw err
+const createPDFServer = function (xml, response, options) {
+  options = options || {};
+  if (options.fonts) {
+    // xml = xmlExample //EXAMPLE
+    return parseString(xml, (err, res) => {
+      if (res) {
+        const json = parseData(res);
+        console.log(json);
+        const content = createPDFContent(json, options);
+        console.log(content);
+        const printer = new PdfPrinter(options.fonts);
+        const doc = printer.createPdfKitDocument(content);
+        // var doc = printer.createPdfKitDocument(pdfmakeExample) //EXAMPLE
+        doc.pipe(response);
+        doc.end();
+      } else {
+        throw err;
       }
-    })
-  }else{
-    throw new Error("You need to define the fonts to be used in the options")
+    });
   }
-}
+  throw new Error('You need to define the fonts to be used in the options');
+};
 
 module.exports = createPDFServer;
