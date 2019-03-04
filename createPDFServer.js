@@ -1,16 +1,14 @@
+const { parseString } = require('xml2js');
+const PdfPrinter = require('pdfmake/src/printer');
+
 // import necesary functions
 const parseData = require('./parseData');
 const createPDFContent = require('./createPDFContent');
 
 // EXAMPLE---------------------------
-const pdfmakeExample = require('./examples/pdfmakeExample');
-const xmlExample = require('./examples/xmlExample');
+// const pdfmakeExample = require('./examples/pdfmakeExample');
+// const xmlExample = require('./examples/xmlExample');
 //----------------------------------
-
-// require parseString
-const { parseString } = require('xml2js'); // Conversion de xml a objeto de javascript
-// require pdfmake
-const PdfPrinter = require('pdfmake/src/printer');
 
 /**
 * creates a pdf of a received cfdi xml in the client
@@ -18,8 +16,7 @@ const PdfPrinter = require('pdfmake/src/printer');
 * @param {Object} response response sent from the server to the client
 * @param {Object} options options
 */
-const createPDFServer = function (xml, response, options) {
-  options = options || {};
+const createPDFServer = (xml, response, options = {}) => {
   if (options.fonts) {
     // xml = xmlExample //EXAMPLE
     return parseString(xml, (err, res) => {

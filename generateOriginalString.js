@@ -31,6 +31,7 @@ const generateOriginalString = (json) => {
       cadenaOriginal += generatePipe(json.receptor.residenciaFiscal);
       cadenaOriginal += generatePipe(json.receptor.numRegIdTrib);
       cadenaOriginal += generatePipe(json.receptor.usoCFDI);
+      // eslint-disable-next-line
       json.conceptos.map((concepto) => {
         cadenaOriginal += generatePipe(concepto.clave);
         cadenaOriginal += generatePipe(concepto.noIdentificacion);
@@ -52,11 +53,13 @@ const generateOriginalString = (json) => {
         cadenaOriginal += generatePipe(concepto.tasaOCuotaRetencion);
         cadenaOriginal += generatePipe(concepto.importeRetencion);
       });
+      // eslint-disable-next-line
       json.retenciones.map((retencion) => {
         cadenaOriginal += generatePipe(retencion.impuesto);
         cadenaOriginal += generatePipe(retencion.importe);
       });
       cadenaOriginal += generatePipe(json.totalImpuestosRetenidos);
+      // eslint-disable-next-line
       json.traslados.map((traslado) => {
         cadenaOriginal += generatePipe(traslado.impuesto);
         cadenaOriginal += generatePipe(traslado.tipoFactor);

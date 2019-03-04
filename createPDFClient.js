@@ -1,14 +1,14 @@
+const { parseString } = require('xml2js');
+
 // import necesary functions
 const parseData = require('./parseData');
 const createPDFContent = require('./createPDFContent');
 
 // EXAMPLE---------------------------
-const pdfmakeExample = require('./examples/pdfmakeExample');
-const xmlExample = require('./examples/xmlExample');
+// const pdfmakeExample = require('./examples/pdfmakeExample');
+// const xmlExample = require('./examples/xmlExample');
 //----------------------------------
 
-// require parseString
-const { parseString } = require('xml2js'); // Conversion de xml a objeto de javascript
 // require pdfmake
 require('pdfmake/build/pdfmake.js');
 require('pdfmake/build/vfs_fonts.js');
@@ -25,6 +25,7 @@ const createPDFClient = (xml, options = {}) => {
       console.log(json);
       const content = createPDFContent(json, options);
       console.log(content);
+      // eslint-disable-next-line
       pdfMake.createPdf(content).open();
       // pdfMake.createPdf(pdfmakeExmaple).open() //EXAMPLE
     } else {

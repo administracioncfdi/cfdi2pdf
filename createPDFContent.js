@@ -57,13 +57,14 @@ const generatePayments = (pagos) => {
       body: generateRelatedDocs(pago.doctoRelacionados),
     },
     layout: {
-      fillColor(i, node) {
-        return (i % 2 != 0) ? '#CCCCCC' : null;
+      fillColor(i) {
+        return (i % 2 !== 0) ? '#CCCCCC' : null;
       },
     },
   },
   '\n',
   ]);
+  // eslint-disable-next-line
   return [].concat.apply([], arr);
 };
 
@@ -74,18 +75,23 @@ const generateQrCode = (json) => {
     .replace('{re}', json.emisor.rfc)
     .replace('{rr}', json.receptor.rfc)
     .replace('{tt}', json.total)
-    .replace('{fe}', json.timbreFiscalDigital.selloCFD.substring(json.timbreFiscalDigital.selloCFD.length - 8, json.timbreFiscalDigital.selloCFD.length));
+    .replace('{fe}', json.timbreFiscalDigital.selloCFD.substring(
+      json.timbreFiscalDigital.selloCFD.length - 8, json.timbreFiscalDigital.selloCFD.length,
+    ));
   return qrCode;
 };
 
 const generateStampTable = (json) => {
   let arr = [];
   if (json.timbreFiscalDigital) {
+    const fechaHoraCertificacion = json.timbreFiscalDigital.fechaTimbrado
+      ? json.timbreFiscalDigital.fechaTimbrado.substring(0, 10) + json.timbreFiscalDigital.fechaTimbrado.substring(11, 19)
+      : '';
     arr = [
       [{
         colSpan: 1, rowSpan: 6, qr: generateQrCode(json), fit: 140,
       }, 'NUMERO SERIE CERTIFICADO', checkIfExists(json.timbreFiscalDigital.noCertificadoSAT)],
-      ['', 'FECHA HORA CERTIFICACION', json.timbreFiscalDigital.fechaTimbrado ? json.timbreFiscalDigital.fechaTimbrado.substring(0, 10) + json.timbreFiscalDigital.fechaTimbrado.substring(11, 19) : ''],
+      ['', 'FECHA HORA CERTIFICACION', fechaHoraCertificacion],
       ['', 'FOLIO FISCAL UUID', checkIfExists(json.timbreFiscalDigital.uuid)],
       ['', 'SELLO DIGITAL', checkIfExists(json.timbreFiscalDigital.selloCFD)],
       ['', 'SELLO DEL SAT', checkIfExists(json.timbreFiscalDigital.selloSAT)],
@@ -181,8 +187,8 @@ const generateContent = (json, logo, text) => {
       body: generateConceptsTable(json.conceptos),
     },
     layout: {
-      fillColor(i, node) {
-        return (i % 2 != 0) ? '#CCCCCC' : null;
+      fillColor(i) {
+        return (i % 2 !== 0) ? '#CCCCCC' : null;
       },
     },
   });
@@ -250,6 +256,7 @@ const generateContent = (json, logo, text) => {
 */
 const createPDFContent = (json, options) => {
   // look for a base64 image
+  // eslint-disable-next-line
   const logo = options.image || require('./examples/defaultImage.js');
   const dd = {
     content: generateContent(json, logo, options.text),

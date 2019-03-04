@@ -129,14 +129,14 @@ const parseData = (parsedXml) => {
         if (comprobantePago) {
           obj.pagos = comprobantePago.map((pago) => {
             const doctoRelacionado = pago['pago10:DoctoRelacionado'];
-            const obj = {};
-            obj.fecha = pago.$.FechaPago;
-            obj.formaPago = pago.$.FormaDePagoP;
-            obj.moneda = pago.$.MonedaP;
-            obj.monto = pago.$.Monto;
-            obj.doctoRelacionados = [];
+            const pagoObj = {};
+            pagoObj.fecha = pago.$.FechaPago;
+            pagoObj.formaPago = pago.$.FormaDePagoP;
+            pagoObj.moneda = pago.$.MonedaP;
+            pagoObj.monto = pago.$.Monto;
+            pagoObj.doctoRelacionados = [];
             if (doctoRelacionado) {
-              obj.doctoRelacionados = doctoRelacionado.map(doc => ({
+              pagoObj.doctoRelacionados = doctoRelacionado.map(doc => ({
                 uuid: doc.$.IdDocumento,
                 moneda: doc.$.MonedaDR,
                 metodoDePago: doc.$.MetodoDePagoDR,
@@ -146,7 +146,7 @@ const parseData = (parsedXml) => {
                 saldoInsoluto: doc.$.ImpSaldoInsoluto,
               }));
             }
-            return obj;
+            return pagoObj;
           });
         }
       }

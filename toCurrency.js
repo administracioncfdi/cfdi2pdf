@@ -15,6 +15,7 @@ const getGroupToCurrency = (group) => {
       case 0: return '';
       default: toCurrency += `${hundreds[parseInt(group[0], 10)]} `;
     }
+    // eslint-disable-next-line
     group = group.substring(1, 3);
   }
   // handle teens and 'basic' numbers
@@ -37,9 +38,9 @@ const getGroupToCurrency = (group) => {
 };
 
 // function to get entire number to currency
-const toCurrency = (number) => {
+const toCurrency = (num) => {
   // number to string
-  number = number.toFixed(2);
+  const number = num.toFixed(2);
   // separate decimals (only 2) and integers
   let integers = number.substring(0, number.indexOf('.'));
   const decimals = number.substring(number.indexOf('.') + 1, number.length);
