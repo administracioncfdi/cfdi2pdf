@@ -11,11 +11,11 @@ const createPDFContent = require('./createPDFContent');
 //----------------------------------
 
 /**
-* creates a pdf of a received cfdi xml in the client
-* @param {String} xml xml in string
-* @param {Object} response response sent from the server to the client
-* @param {Object} options options
-*/
+ * creates a pdf of a received cfdi xml in the client
+ * @param {String} xml xml in string
+ * @param {Object} response response sent from the server to the client
+ * @param {Object} options options
+ */
 const createPDFServer = (xml, response, options = {}) => {
   if (options.fonts) {
     // xml = xmlExample //EXAMPLE

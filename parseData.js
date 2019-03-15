@@ -1,11 +1,11 @@
 const { checkIfValue } = require('./check');
 const { checkIfExists } = require('./check');
 /**
-* Receives a parsed XML resulting from using the dependency xml2js
-* and returns the relevant information in a simple json (THIS IS ONLY VALID FOR 3.3)
-* @param {String} parsedXml parsed xml
-*/
-const parseData = (parsedXml) => {
+ * Receives a parsed XML resulting from using the dependency xml2js
+ * and returns the relevant information in a simple json (THIS IS ONLY VALID FOR 3.3)
+ * @param {String} parsedXml parsed xml
+ */
+const parseData = parsedXml => {
   // inicializar variables
   const obj = {};
   // obtener comprobante de xml
@@ -54,9 +54,9 @@ const parseData = (parsedXml) => {
     if (comprobanteConceptos) {
       const comprobanteConcepto = comprobanteConceptos[0]['cfdi:Concepto'];
       if (comprobanteConcepto) {
-        obj.conceptos = comprobanteConcepto.map((concepto) => {
-          let traslado; let
-            retencion;
+        obj.conceptos = comprobanteConcepto.map(concepto => {
+          let traslado;
+          let retencion;
           const impuestos = concepto['cfdi:Impuestos'];
           if (impuestos) {
             const traslados = impuestos[0]['cfdi:Traslados'];
@@ -93,7 +93,7 @@ const parseData = (parsedXml) => {
       }
     }
     // inicializar objeto cfdiRelacionado
-    obj.cfdiRelacionado = { };
+    obj.cfdiRelacionado = {};
     // obtener cfdiRelacionado del comprobante
     const comprobanteCfdiRelacionados = comprobante['cfdi:CfdiRelacionados'];
     if (comprobanteCfdiRelacionados) {
@@ -127,7 +127,7 @@ const parseData = (parsedXml) => {
       if (comprobantePagos) {
         const comprobantePago = comprobantePagos[0]['pago10:Pago'];
         if (comprobantePago) {
-          obj.pagos = comprobantePago.map((pago) => {
+          obj.pagos = comprobantePago.map(pago => {
             const doctoRelacionado = pago['pago10:DoctoRelacionado'];
             const pagoObj = {};
             pagoObj.fecha = pago.$.FechaPago;
@@ -189,7 +189,7 @@ const parseData = (parsedXml) => {
       obj.totalImpuestosTrasladados = checkIfValue(comprobanteImpuestos[0].$.TotalImpuestosTrasladados);
     }
   } else {
-    throw new Error("Couldn't obtain element \"Comprobante\" from invoice");
+    throw new Error('Couldn\'t obtain element "Comprobante" from invoice');
   }
   return obj;
 };

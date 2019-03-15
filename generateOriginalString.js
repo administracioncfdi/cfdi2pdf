@@ -1,6 +1,6 @@
 const generatePipe = campo => (campo ? `${campo}|` : '');
 
-const generateOriginalString = (json) => {
+const generateOriginalString = json => {
   let cadenaOriginal = '||';
   switch (json.tipoDeComprobante.toUpperCase()) {
     case 'I':

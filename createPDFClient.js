@@ -14,9 +14,9 @@ require('pdfmake/build/pdfmake.js');
 require('pdfmake/build/vfs_fonts.js');
 
 /**
-* creates a pdf of a received cfdi xml in the client
-* @param {String} xml xml in string
-*/
+ * creates a pdf of a received cfdi xml in the client
+ * @param {String} xml xml in string
+ */
 const createPDFClient = (xml, options = {}) => {
   // xml = xmlExample //EXAMPLE
   parseString(xml, (err, res) => {

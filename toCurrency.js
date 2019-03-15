@@ -1,19 +1,48 @@
 // function to get maximum 3 digits to letters (currency)
-const getGroupToCurrency = (group) => {
+const getGroupToCurrency = group => {
   // necessary arrays needed to convert from numbers to currency
-  const basics = ['cero', 'un', 'dos', 'tres', 'cuatro', 'cinco',
-    'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce', 'quince'];
+  const basics = [
+    'cero',
+    'un',
+    'dos',
+    'tres',
+    'cuatro',
+    'cinco',
+    'seis',
+    'siete',
+    'ocho',
+    'nueve',
+    'diez',
+    'once',
+    'doce',
+    'trece',
+    'catorce',
+    'quince',
+  ];
   const teens = ['', 'dieci', 'veinti', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
-  const hundreds = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos',
-    'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+  const hundreds = [
+    '',
+    'ciento',
+    'doscientos',
+    'trescientos',
+    'cuatrocientos',
+    'quinientos',
+    'seiscientos',
+    'setecientos',
+    'ochocientos',
+    'novecientos',
+  ];
   // variable used to temporarly store currency
   let toCurrency = '';
   // handle hundreds
   if (group.length === 3) {
     switch (parseInt(group, 10)) {
-      case 100: return 'cien ';
-      case 0: return '';
-      default: toCurrency += `${hundreds[parseInt(group[0], 10)]} `;
+      case 100:
+        return 'cien ';
+      case 0:
+        return '';
+      default:
+        toCurrency += `${hundreds[parseInt(group[0], 10)]} `;
     }
     // eslint-disable-next-line
     group = group.substring(1, 3);
@@ -27,10 +56,14 @@ const getGroupToCurrency = (group) => {
     toCurrency += `${basics[parseInt(group, 10)]} `;
   } else {
     // else look for the number in both teens and basics arrays
-    const zeroAtTheEnd = (group[1] === '0');
+    const zeroAtTheEnd = group[1] === '0';
     switch (parseInt(group, 10)) {
-      case 20: return `${toCurrency}veinte `;
-      default: toCurrency += `${teens[parseInt(group[0], 10)] + (parseInt(group[0], 10) >= 3 && !zeroAtTheEnd ? ' y ' : '') + (zeroAtTheEnd ? '' : basics[parseInt(group[1], 10)])} `;
+      case 20:
+        return `${toCurrency}veinte `;
+      default:
+        toCurrency += `${teens[parseInt(group[0], 10)] +
+          (parseInt(group[0], 10) >= 3 && !zeroAtTheEnd ? ' y ' : '') +
+          (zeroAtTheEnd ? '' : basics[parseInt(group[1], 10)])} `;
     }
   }
   // return result
@@ -38,7 +71,7 @@ const getGroupToCurrency = (group) => {
 };
 
 // function to get entire number to currency
-const toCurrency = (num) => {
+const toCurrency = num => {
   // number to string
   const number = num.toFixed(2);
   // separate decimals (only 2) and integers
@@ -61,9 +94,13 @@ const toCurrency = (num) => {
       const group = integers.substring(0, integers.length - 9);
       thousandsOfMillions = true;
       switch (parseInt(group, 10)) {
-        case 0: break;
-        case 1: numberToCurrency += 'mil '; break;
-        default: numberToCurrency += `${getGroupToCurrency(group)}mil `;
+        case 0:
+          break;
+        case 1:
+          numberToCurrency += 'mil ';
+          break;
+        default:
+          numberToCurrency += `${getGroupToCurrency(group)}mil `;
       }
       integers = integers.substring(integers.length - 9, integers.length);
     }
@@ -83,16 +120,22 @@ const toCurrency = (num) => {
       const group = integers.substring(0, integers.length - 3);
       noThouhsands = parseInt(group, 10) === 0;
       switch (parseInt(group, 10)) {
-        case 0: break;
-        case 1: numberToCurrency += 'mil '; break;
-        default: numberToCurrency += `${getGroupToCurrency(group)}mil `;
+        case 0:
+          break;
+        case 1:
+          numberToCurrency += 'mil ';
+          break;
+        default:
+          numberToCurrency += `${getGroupToCurrency(group)}mil `;
       }
       integers = integers.substring(integers.length - 3, integers.length);
     }
     // evaluate hundreds
     noHundreds = parseInt(integers, 10) === 0;
     numberToCurrency += getGroupToCurrency(integers);
-    numberToCurrency += `${(noThouhsands && noHundreds ? 'de ' : '') + (numberToCurrency === 'un ' ? 'peso ' : 'pesos ') + decimals}/100 M.N.`;
+    numberToCurrency += `${(noThouhsands && noHundreds ? 'de ' : '') +
+      (numberToCurrency === 'un ' ? 'peso ' : 'pesos ') +
+      decimals}/100 M.N.`;
     return numberToCurrency.toUpperCase();
   }
   return 'Error: el número es demasiado grande.';
