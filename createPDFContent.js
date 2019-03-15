@@ -9,7 +9,6 @@ const tipoDeComprobanteCatalogue = require('./catalogues/tipoDeComprobante');
 const tipoRelacionCatalogue = require('./catalogues/tipoRelacion');
 const usoCFDICatalogue = require('./catalogues/usoCFDI');
 const toCurrency = require('./toCurrency');
-const generateOriginalString = require('./generateOriginalString');
 const { checkIfExists } = require('./check');
 
 const generateConceptsTable = conceptos => {
@@ -163,7 +162,7 @@ const generateStampTable = json => {
       ['', 'SELLO DEL SAT', checkIfExists(json.timbreFiscalDigital.selloSAT)],
     );
   }
-  arr.push(['', 'CADENA ORIGINAL:', generateOriginalString(json)]);
+  arr.push(['', 'CADENA ORIGINAL CC:', json.cadenaOriginalCC]);
   return arr;
 };
 
