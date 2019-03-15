@@ -422,6 +422,28 @@ const createPDFContent = (json, options) => {
     defaultStyle: {
       // alignment: 'justify'
     },
+    footer() {
+      return {
+        style: 'tableContent',
+        table: {
+          widths: ['auto', '*', 'auto', 'auto'],
+          body: [
+            [
+              {
+                text: 'Este documento es una representación impresa de un CFDI',
+                style: 'tableList',
+                colSpan: 4,
+                alignment: 'center',
+              },
+              {},
+              {},
+              {},
+            ],
+          ],
+        },
+        layout: 'lightHorizontalLines',
+      };
+    },
   };
   return dd;
 };
