@@ -141,25 +141,27 @@ const generateQrCode = json => {
 };
 
 const generateStampTable = json => {
-  let arr = [];
+  const arr = [];
   if (json.timbreFiscalDigital) {
     const fechaHoraCertificacion = json.timbreFiscalDigital.fechaTimbrado;
-    arr = [
+    arr.push(
       [
         {
           colSpan: 1,
-          rowSpan: 6,
+          rowSpan: 8,
           qr: generateQrCode(json),
           fit: 140,
         },
-        'NUMERO SERIE CERTIFICADO',
-        checkIfExists(json.timbreFiscalDigital.noCertificadoSAT),
+        '',
+        '',
       ],
+      ['', 'NUMERO SERIE CERTIFICADO SAT', checkIfExists(json.timbreFiscalDigital.noCertificadoSAT)],
+      ['', 'NUMERO SERIE CERTIFICADO EMISOR', checkIfExists(json.noCertificado)],
       ['', 'FECHA HORA CERTIFICACION', fechaHoraCertificacion],
       ['', 'FOLIO FISCAL UUID', checkIfExists(json.timbreFiscalDigital.uuid)],
       ['', 'SELLO DIGITAL', checkIfExists(json.timbreFiscalDigital.selloCFD)],
       ['', 'SELLO DEL SAT', checkIfExists(json.timbreFiscalDigital.selloSAT)],
-    ];
+    );
   }
   arr.push(['', 'CADENA ORIGINAL:', generateOriginalString(json)]);
   return arr;
