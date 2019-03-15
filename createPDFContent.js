@@ -98,7 +98,7 @@ const generatePayments = pagos => {
           ],
           [
             'FECHA:',
-            pago.fecha ? pago.fecha.substring(0, 10) : '',
+            pago.fecha,
             'FORMA PAGO:',
             formaPagoCatalogue[pago.formaPago] ? `${pago.formaPago} - ${formaPagoCatalogue[pago.formaPago]}` : '',
           ],
@@ -143,9 +143,7 @@ const generateQrCode = json => {
 const generateStampTable = json => {
   let arr = [];
   if (json.timbreFiscalDigital) {
-    const fechaHoraCertificacion = json.timbreFiscalDigital.fechaTimbrado
-      ? json.timbreFiscalDigital.fechaTimbrado.substring(0, 10) + json.timbreFiscalDigital.fechaTimbrado.substring(11, 19)
-      : '';
+    const fechaHoraCertificacion = json.timbreFiscalDigital.fechaTimbrado;
     arr = [
       [
         {
@@ -180,7 +178,7 @@ const generateContent = (json, logo, text) => {
       body: [
         [{ rowSpan: 5, image: logo, fit: [260, 260] }, 'SERIE:', json.serie],
         ['', 'FOLIO:', json.folio],
-        ['', 'FECHA:', json.fecha ? json.fecha.substring(0, 10) : ''],
+        ['', 'FECHA:', json.fecha],
         ['', 'EXPEDICION:', json.lugar],
         [
           '',
