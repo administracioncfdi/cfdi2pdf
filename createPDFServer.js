@@ -1,15 +1,22 @@
-const { parseString } = require('xml2js');
+const xml2js = require('xml2js');
 const PdfPrinter = require('pdfmake/src/printer');
 const { cadenaOriginal } = require('validadorcfdi');
+const fs = require('fs');
+const util = require('util');
 
-// import necesary functions
 const parseData = require('./parseData');
 const createPDFContent = require('./createPDFContent');
 
-// EXAMPLE---------------------------
-// const pdfmakeExample = require('./examples/pdfmakeExample');
-// const xmlExample = require('./examples/xmlExample');
-//----------------------------------
+xml2js.parseStringPromise = util.promisify(xml2js.parseString);
+
+const defaultFonts = {
+  Roboto: {
+    normal: '../cfdi2pdf/fonts/Roboto/Roboto-Regular.ttf',
+    bold: '../cfdi2pdf/fonts/Roboto/Roboto-Medium.ttf',
+    italics: '../cfdi2pdf/fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics: '../cfdi2pdf/fonts/Roboto/Roboto-MediumItalic.ttf',
+  },
+};
 
 /**
  * creates a pdf of a received cfdi xml in the client
@@ -17,26 +24,26 @@ const createPDFContent = require('./createPDFContent');
  * @param {Object} response response sent from the server to the client
  * @param {Object} options options
  */
-const createPDFServer = (xml, response, options = {}) => {
-  if (!options.fonts) {
-    throw new Error('You need to define the fonts to be used in the options');
+const createPDFServer = async (xml, response, options = {}) => {
+  const parsedXML = await xml2js.parseStringPromise(xml);
+  const jsonData = parseData(parsedXML);
+  const trimmedXML = xml.trim();
+  jsonData.cadenaOriginal = await cadenaOriginal.generaCadena(trimmedXML);
+  jsonData.cadenaOriginalCC = cadenaOriginal.generaCadenaOriginalCC(trimmedXML);
+
+  const printer = new PdfPrinter(options.fonts || defaultFonts);
+
+  const docDefinition = createPDFContent(jsonData, options);
+  const doc = printer.createPdfKitDocument(docDefinition);
+  if (options.save && options.save.folder && options.save.fileName) {
+    const fileName = `${options.save.folder}/${options.save.fileName}`;
+    const writeStream = fs.createWriteStream(fileName);
+    doc.pipe(writeStream);
   }
-  // xml = xmlExample //EXAMPLE
-  return parseString(xml, async (err, res) => {
-    if (err || !res) {
-      throw err;
-    }
-    const parsedXML = parseData(res);
-    const trimmedXML = xml.trim();
-    parsedXML.cadenaOriginal = await cadenaOriginal.generaCadena(trimmedXML);
-    parsedXML.cadenaOriginalCC = cadenaOriginal.generaCadenaOriginalCC(trimmedXML);
-    const content = createPDFContent(parsedXML, options);
-    const printer = new PdfPrinter(options.fonts);
-    const doc = printer.createPdfKitDocument(content);
-    // var doc = printer.createPdfKitDocument(pdfmakeExample) //EXAMPLE
-    doc.pipe(response);
-    doc.end();
-  });
+  doc.pipe(response);
+  doc.end();
+
+  return doc;
 };
 
 module.exports = createPDFServer;
