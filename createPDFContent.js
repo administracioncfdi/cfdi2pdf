@@ -9,6 +9,7 @@ const tipoDeComprobanteCatalogue = require('./catalogues/tipoDeComprobante');
 const tipoRelacionCatalogue = require('./catalogues/tipoRelacion');
 const usoCFDICatalogue = require('./catalogues/usoCFDI');
 const toCurrency = require('./toCurrency');
+const { formatCurrency } = require('./utils');
 const { checkIfExists } = require('./check');
 
 const generateConceptsTable = conceptos => {
@@ -18,11 +19,11 @@ const generateConceptsTable = conceptos => {
     concepto.claveUnidad,
     claveUnidadCatalogue[concepto.claveUnidad],
     concepto.descripcion,
-    `$ ${concepto.valorUnitario}`,
-    `$ ${concepto.descuento}`,
+    `${formatCurrency(concepto.valorUnitario)}`,
+    `${formatCurrency(concepto.descuento)}`,
     impuestoCatalogue[concepto.impuestoTraslado] ? `${concepto.impuestoTraslado} - ${impuestoCatalogue[concepto.impuestoTraslado]}` : '',
-    `$ ${concepto.importeTraslado}`,
-    `$ ${concepto.importe}`,
+    `${formatCurrency(concepto.importeTraslado)}`,
+    `${formatCurrency(concepto.importe)}`,
   ]);
   arr.unshift([
     'ClaveProdServ',
@@ -60,7 +61,13 @@ const generateConceptsTable = conceptos => {
 };
 
 const generateRelatedDocs = docs => {
-  const arr = docs.map(doc => [doc.uuid, doc.numParcialidad, `$ ${doc.saldoAnterior}`, `$ ${doc.importePagado}`, `$ ${doc.saldoInsoluto}`]);
+  const arr = docs.map(doc => [
+    doc.uuid,
+    doc.numParcialidad,
+    `${formatCurrency(doc.saldoAnterior)}`,
+    `${formatCurrency(doc.importePagado)}`,
+    `${formatCurrency(doc.saldoInsoluto)}`,
+  ]);
   arr.unshift(['UUID', 'Num. Parcialidad', 'Importe Saldo Anterior', 'Importe Pagado', 'Importe Saldo Insoluto']);
   arr.unshift([
     {
@@ -101,7 +108,12 @@ const generatePayments = pagos => {
             'FORMA PAGO:',
             formaPagoCatalogue[pago.formaPago] ? `${pago.formaPago} - ${formaPagoCatalogue[pago.formaPago]}` : '',
           ],
-          ['MONEDA:', monedaCatalogue[pago.moneda] ? `${pago.moneda} - ${monedaCatalogue[pago.moneda]}` : '', 'MONTO:', `$ ${pago.monto}`],
+          [
+            'MONEDA:',
+            monedaCatalogue[pago.moneda] ? `${pago.moneda} - ${monedaCatalogue[pago.moneda]}` : '',
+            'MONTO:',
+            `${formatCurrency(pago.monto)}`,
+          ],
         ],
       },
       layout: 'lightHorizontalLines',
@@ -340,15 +352,15 @@ const generateContent = (json, logo, text) => {
             'CFDI RELACIONADO:',
             checkIfExists(json.cfdiRelacionado.uuid),
           ],
-          ['SUBTOTAL:', `$ ${json.subTotal}`, 'TOTAL:', `$ ${json.total}`],
-          ['DESCUENTO:', `$ ${json.descuento}`, { colSpan: 2, text: 'IMPORTE CON LETRA:' }, ''],
+          ['SUBTOTAL:', `${formatCurrency(json.subTotal)}`, 'TOTAL:', `${formatCurrency(json.total)}`],
+          ['DESCUENTO:', `${formatCurrency(json.descuento)}`, { colSpan: 2, text: 'IMPORTE CON LETRA:' }, ''],
           [
             'TOTAL IMP. TRASLADADOS:',
-            `$ ${json.totalImpuestosTrasladados}`,
+            `${formatCurrency(json.totalImpuestosTrasladados)}`,
             { colSpan: 2, rowSpan: 2, text: toCurrency(parseFloat(json.total)) },
             '',
           ],
-          ['TOTAL IMP. RETENIDOS:', `$ ${json.totalImpuestosRetenidos}`, '', ''],
+          ['TOTAL IMP. RETENIDOS:', `${formatCurrency(json.totalImpuestosRetenidos)}`, '', ''],
         ],
       },
       layout: 'lightHorizontalLines',
