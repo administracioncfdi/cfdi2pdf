@@ -63,19 +63,34 @@ const generateConceptsTable = conceptos => {
 const generateRelatedDocs = docs => {
   const arr = docs.map(doc => [
     doc.uuid,
+    doc.metodoPago,
+    doc.moneda,
+    doc.tipoCambio,
     doc.numParcialidad,
     `${formatCurrency(doc.saldoAnterior)}`,
     `${formatCurrency(doc.importePagado)}`,
     `${formatCurrency(doc.saldoInsoluto)}`,
   ]);
-  arr.unshift(['UUID', 'Num. Parcialidad', 'Importe Saldo Anterior', 'Importe Pagado', 'Importe Saldo Insoluto']);
+  arr.unshift([
+    'UUID',
+    'Método de Pago',
+    'Moneda',
+    'Tipo de Cambio',
+    'Num. Parcialidad',
+    'Importe Saldo Anterior',
+    'Importe Pagado',
+    'Importe Saldo Insoluto',
+  ]);
   arr.unshift([
     {
       text: 'DOCUMENTOS RELACIONADOS',
       style: 'tableHeader',
-      colSpan: 5,
+      colSpan: 8,
       alignment: 'center',
     },
+    {},
+    {},
+    {},
     {},
     {},
     {},
@@ -114,6 +129,7 @@ const generatePayments = pagos => {
             'MONTO:',
             `${formatCurrency(pago.monto)}`,
           ],
+          pago.tipoCambio ? ['TIPO DE CAMBIO:', pago.tipoCambio, '', ''] : ['', '', '', ''],
         ],
       },
       layout: 'lightHorizontalLines',
@@ -122,7 +138,7 @@ const generatePayments = pagos => {
     {
       style: 'tableList',
       table: {
-        widths: ['*', 'auto', 75, 75, 75],
+        widths: ['*', 'auto', 'auto', 30, 20, 'auto', 'auto', 'auto'],
         body: generateRelatedDocs(pago.doctoRelacionados),
       },
       layout: {
