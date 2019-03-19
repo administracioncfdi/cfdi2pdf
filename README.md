@@ -1,5 +1,5 @@
 ##  README
-version 1.1
+version 2.0.0
 
 **cdfi2pdf** creates a pdf based on an XML CFDI. It uses pdfmake and xml2js as dependencies.
 
@@ -21,7 +21,7 @@ $ cd cfditest
 
 2.- Install from NPM
 ~~~
-$ npm install cfdi2pdf
+$ npm install --save cfdi2pdf
 ~~~
 
 
@@ -29,8 +29,8 @@ $ npm install cfdi2pdf
 
 You need to pass an XML string to the method in order to get the PDF document.
 ~~~
-var cfdi2pdf = require("cfdi2pdf")
-cfdi2pdf.createPDFClient(xml)
+const cfdi2pdf = require("cfdi2pdf");
+cfdi2pdf.createPDFClient(xml);
 ~~~
 
 
@@ -46,31 +46,33 @@ Here is an example using express:
 
 *create a file: cfdi2pdf_test.js*
 ~~~
-var express = require('express');
-var app = express();
-var cfdi2pdf = require("cfdi2pdf")
-
-var fonts = {
-	Roboto: {
-		normal: './fonts/Roboto-Regular.ttf',
-		bold: './fonts/Roboto-Medium.ttf',
-		italics: './fonts/Roboto-Italic.ttf',
-		bolditalics: './fonts/Roboto-MediumItalic.ttf'
-	}
+const express = require('express');
+const app = express();
+const cfdi2pdf = require("cfdi2pdf");
+const fonts = {
+  Roboto: {
+    normal: 'public/fonts/Roboto/Roboto-Regular.ttf',
+    bold: 'public/fonts/Roboto/Roboto-Medium.ttf',
+    italics: 'public/fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics: 'public/fonts/Roboto/Roboto-MediumItalic.ttf'
+  }
 };
-
-//the image must be a base 64 string
-var image = ""
-
-var options = {
-      fonts:fonts,
-      image:image //the image is optional
-    };
-
-var xml = "" //the xml in string
-
-app.get('/', function (req, res) {
-  cfdi2pdf.createPDFServer(xml,res, options)
+// Image must be a base 64 string
+const image = "";
+const options = {
+  fonts,
+  image,
+  save: {
+    folder: 'public/pdf/',
+    fileName: `myPDF.pdf`,
+  },
+};
+// XML in string
+const xml = "";
+app.get('/', async function(req, res, next) {
+  const doc = await cfdi2pdf.createPDFServer(xml, options);
+  doc.pipe(res);
+  doc.end();
 });
 
 app.listen(3000, function () {
@@ -89,17 +91,8 @@ and voilà, you have a PDF representation of a CFDI 3.3
 
 <hr>
 
-## License
-
-Copyright 2018 Quad Tree
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
 ## Made with love at Quad Tree / SLP / Mexico
 by: Manuel Garcia, Carlos Alvarez, Enrique Motilla
 visit our project at:  https://erpcloud.mx
+
+Maintained by: Alan Rodríguez
