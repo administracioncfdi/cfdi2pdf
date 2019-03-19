@@ -24,7 +24,7 @@ const defaultFonts = {
  * @param {Object} response response sent from the server to the client
  * @param {Object} options options
  */
-const createPDFServer = async (xml, response, options = {}) => {
+const createPDFServer = async (xml, options = {}) => {
   const parsedXML = await xml2js.parseStringPromise(xml);
   const jsonData = parseData(parsedXML);
   const trimmedXML = xml.trim();
@@ -40,8 +40,6 @@ const createPDFServer = async (xml, response, options = {}) => {
     const writeStream = fs.createWriteStream(fileName);
     doc.pipe(writeStream);
   }
-  doc.pipe(response);
-  doc.end();
 
   return doc;
 };
