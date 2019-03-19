@@ -1,4 +1,4 @@
-##  README
+## cfdi2pdf
 version 2.0.0
 
 **cdfi2pdf** creates a pdf based on an XML CFDI. It uses pdfmake and xml2js as dependencies.

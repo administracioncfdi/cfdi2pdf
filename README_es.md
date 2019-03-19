@@ -1,4 +1,4 @@
-##  README
+## cfdi2pdf
 versión 2.0.0
 
 **cdfi2pdf** genera un PDF a partir de un XML con CFDI version 3.3 para facturas electrónics de Mexico de acuerdo a los requerimientos del SAT. El PDF generado es una representación del contenido del XML.
