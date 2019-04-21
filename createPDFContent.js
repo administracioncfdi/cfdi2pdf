@@ -9,7 +9,7 @@ const tipoDeComprobanteCatalogue = require('./catalogues/tipoDeComprobante');
 const tipoRelacionCatalogue = require('./catalogues/tipoRelacion');
 const usoCFDICatalogue = require('./catalogues/usoCFDI');
 const toCurrency = require('./toCurrency');
-const { formatCurrency } = require('./utils');
+const { formatCurrency, breakEveryNCharacters } = require('./utils');
 const { checkIfExists } = require('./check');
 
 const generateConceptsTable = conceptos => {
@@ -186,11 +186,11 @@ const generateStampTable = json => {
       ['', 'NUMERO SERIE CERTIFICADO EMISOR', checkIfExists(json.noCertificado)],
       ['', 'FECHA HORA CERTIFICACION', fechaHoraCertificacion],
       ['', 'FOLIO FISCAL UUID', checkIfExists(json.timbreFiscalDigital.uuid)],
-      ['', 'SELLO DIGITAL', checkIfExists(json.timbreFiscalDigital.selloCFD)],
-      ['', 'SELLO DEL SAT', checkIfExists(json.timbreFiscalDigital.selloSAT)],
+      ['', 'SELLO DIGITAL', breakEveryNCharacters(checkIfExists(json.timbreFiscalDigital.selloCFD), 86)],
+      ['', 'SELLO DEL SAT', breakEveryNCharacters(checkIfExists(json.timbreFiscalDigital.selloSAT), 86)],
     );
   }
-  arr.push(['', 'CADENA ORIGINAL CC:', json.cadenaOriginalCC]);
+  arr.push(['', 'CADENA ORIGINAL CC:', { text: breakEveryNCharacters(json.cadenaOriginalCC, 86) }]);
   return arr;
 };
 
