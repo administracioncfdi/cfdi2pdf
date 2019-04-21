@@ -440,6 +440,7 @@ const createPDFContent = (json, options) => {
         alignment: 'center',
       },
       tableSat: {
+        font: 'Courier',
         fontSize: 5,
         color: 'black',
         alignment: 'left',
