@@ -198,14 +198,14 @@ const generateStampTable = json => {
 const generateContent = (json, logo, text) => {
   let content = [];
   // this block contains the logo image and general information
-  content.push({
+  const header = {
     alignment: 'center',
     style: 'tableContent',
     table: {
-      widths: ['*', 'auto', 'auto'],
+      widths: ['auto', 'auto', 'auto'],
       fontSize: 9,
       body: [
-        [{ rowSpan: 5, image: logo, fit: [260, 260] }, 'SERIE:', json.serie],
+        ['', 'SERIE:', json.serie],
         ['', 'FOLIO:', json.folio],
         ['', 'FECHA:', json.fecha],
         ['', 'EXPEDICION:', json.lugar],
@@ -219,7 +219,12 @@ const generateContent = (json, logo, text) => {
       ],
     },
     layout: 'lightHorizontalLines',
-  });
+  };
+  if (logo) {
+    header.table.body[0][0] = { rowSpan: 5, image: logo, fit: [260, 260] };
+    header.table.widths = ['*', 'auto', 'auto'];
+  }
+  content.push(header);
   // space
   content.push('\n');
   // this block contains info. about "emisor" object
@@ -420,7 +425,7 @@ const generateContent = (json, logo, text) => {
 const createPDFContent = (json, options) => {
   // look for a base64 image
   // eslint-disable-next-line
-  const logo = options.image || require('./examples/defaultImage.js');
+  const logo = options.image;
   const dd = {
     content: generateContent(json, logo, options.text),
     styles: {
