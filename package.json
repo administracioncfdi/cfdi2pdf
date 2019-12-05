@@ -1,6 +1,6 @@
 {
   "name": "cfdi2pdf",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Convert CFDI xml file to pdf",
   "main": "index.js",
   "scripts": {

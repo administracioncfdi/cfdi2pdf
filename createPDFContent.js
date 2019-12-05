@@ -374,7 +374,12 @@ const generateContent = (json, logo, text) => {
             checkIfExists(json.cfdiRelacionado.uuid),
           ],
           ['SUBTOTAL:', `${formatCurrency(json.subTotal)}`, 'TOTAL:', `${formatCurrency(json.total)}`],
-          ['DESCUENTO:', `${formatCurrency(json.descuento)}`, { text: 'IMPORTE CON LETRA:' }, { text: toCurrency(parseFloat(json.total)) }],
+          [
+            'DESCUENTO:',
+            `${formatCurrency(json.descuento)}`,
+            { text: 'IMPORTE CON LETRA:' },
+            { text: toCurrency(parseFloat(json.total), json.moneda) },
+          ],
           [
             'TOTAL IMP. TRASLADADOS:',
             `${formatCurrency(json.totalImpuestosTrasladados)}`,

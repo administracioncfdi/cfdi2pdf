@@ -71,12 +71,13 @@ const getGroupToCurrency = group => {
 };
 
 // function to get entire number to currency
-const toCurrency = num => {
+const toCurrency = (num, moneda) => {
   // number to string
   const number = num.toFixed(2);
   // separate decimals (only 2) and integers
   let integers = number.substring(0, number.indexOf('.'));
   const decimals = number.substring(number.indexOf('.') + 1, number.length);
+  const monedaName = !moneda || moneda === 'MXN' ? 'M.N.' : moneda;
 
   // intitalize string to store currency
   let numberToCurrency = '';
@@ -135,7 +136,7 @@ const toCurrency = num => {
     numberToCurrency += getGroupToCurrency(integers);
     numberToCurrency += `${(noThouhsands && noHundreds ? 'de ' : '') +
       (numberToCurrency === 'un ' ? 'peso ' : 'pesos ') +
-      decimals}/100 M.N.`;
+      decimals}/100 ${monedaName}`;
     return numberToCurrency.toUpperCase();
   }
   return 'Error: el número es demasiado grande.';

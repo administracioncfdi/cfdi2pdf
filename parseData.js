@@ -140,7 +140,7 @@ const parseData = parsedXml => {
               pagoObj.doctoRelacionados = doctoRelacionado.map(doc => ({
                 uuid: doc.$.IdDocumento,
                 moneda: doc.$.MonedaDR,
-                tipoCambio: checkIfExists(doc.$.tipoCambio),
+                tipoCambio: checkIfExists(doc.$.TipoCambioDR),
                 metodoPago: doc.$.MetodoDePagoDR,
                 numParcialidad: doc.$.NumParcialidad,
                 saldoAnterior: doc.$.ImpSaldoAnt,
